@@ -15,7 +15,7 @@ def testimonial(name, quote, profile_image='images/profile-avatar.png'):
     st.markdown("---")
 
 def home():
-    st.title('✨ Fairylights | 100 GenAI projects')
+    st.title("✨ Fairylights | 100 GenAI projects 🤖")
     st.write("I'm on a mission to explore what's possible with generative AI, by shipping 100 useful projects. Each project is accompanied with a [behind the scenes deep dive](https://fairylightsai.substack.com/) 🤿")
 
 def page_one():
