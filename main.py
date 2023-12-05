@@ -2,16 +2,12 @@ import streamlit as st
 
 def testimonial(name, quote, profile_image='images/profile-avatar.png'):
     st.markdown("---")
-
     col1, col2 = st.columns([1, 9])
-
     with col1:
         st.image(profile_image, width=50, use_column_width=False)
-
     with col2:
         st.markdown(f"**{name}**")
         st.write(quote)
-
     st.markdown("---")
 
 def home():
@@ -46,9 +42,23 @@ def page_five():
     st.write("Leverage scraped data in a spreadsheet for multiple characters/places to generate long-text profile biographies for them.")
     st.success("🚀 Increased bookings made to specialist platform by 300% and organic traffic by 350%")
 
-# Categories sidebar
+projects = {
+    "Home": {"function": home, "tags": []},
+    "#1. Thought Checker": {"function": page_one, "tags": ["OpenAI", "Streamlit"]},
+    "#2. Interview Analyser": {"function": page_two, "tags": ["OpenAI", "Streamlit"]},
+    "#3. Pitch Panda 🏆": {"function": page_three, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"]},
+    "#4. Ask Your Spreadsheets": {"function": page_four, "tags": ["OpenAI", "Pandas", "Streamlit"]},
+    "#5. Generate character profiles": {"function": page_five, "tags": ["OpenAI", "Web Scraping", "Streamlit"]}
+}
+
+def get_unique_tags():
+    unique_tags = set()
+    for project in projects.values():
+        for tag in project["tags"]:
+            unique_tags.add(tag)
+    return list(unique_tags)
+
 with st.sidebar:
-    # Use columns to center the image
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.image('images/profile-avatar.png')
@@ -60,17 +70,20 @@ with st.sidebar:
 
     openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
 
-    page = st.radio("Choose a project", ["Home", "#1. Thought Checker", "#2. Interview Analyser", "#3. Pitch Panda 🏆", "#4. Ask Your Spreadsheets", "#5. Generate character profiles"])
+    with st.expander("Filter project by tools used"):
+        selected_tags = []
+        all_tags = get_unique_tags()
 
-if page == "Home":
-  home()
-elif page == "#1. Thought Checker":
-  page_one()
-elif page == "#2. Interview Analyser":
-  page_two()
-elif page == "#3. Pitch Panda 🏆":
-  page_three()
-elif page == "#4. Ask Your Spreadsheets":
-  page_four()
-elif page == "#5. Generate character profiles":
-  page_five()
+        for tag in all_tags:
+          if st.checkbox(tag):
+            selected_tags.append(tag)
+
+        if selected_tags:
+          filtered_projects = {name: proj for name, proj in projects.items() if
+                         any(tag in proj["tags"] for tag in selected_tags)}
+        else:
+          filtered_projects = projects
+
+page = st.sidebar.radio("Try a project", list(filtered_projects.keys()))
+
+filtered_projects[page]["function"]()
