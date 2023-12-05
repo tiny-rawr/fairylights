@@ -74,9 +74,13 @@ with st.sidebar:
         selected_tags = []
         all_tags = get_unique_tags()
 
+        # Count the number of projects per tag
+        tag_counts = {tag: sum(tag in project["tags"] for project in projects.values()) for tag in all_tags}
+
         for tag in all_tags:
-          if st.checkbox(tag):
-            selected_tags.append(tag)
+            tag_label = f"{tag} ({tag_counts[tag]})"
+            if st.checkbox(tag_label, key=tag):
+                selected_tags.append(tag)
 
         if selected_tags:
           filtered_projects = {name: proj for name, proj in projects.items() if
