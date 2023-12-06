@@ -13,7 +13,6 @@ def testimonial(name, quote, profile_image='images/profile-avatar.png'):
 def home():
     st.title("✨ Fairylights | 100 GenAI projects 🤖")
     st.write("I can't wait to explore what's possible with generative AI with you by shipping 100 awesome use-cases. Try them out for yourself, and [subscribe for the newest possibilities](https://fairylightsai.substack.com/) 💌🥰")
-    st.write("Add feature request option below project, and a bug report button so people can tell me what they tried to do when something went wrong.")
 
 def page_one():
     st.title('🧠 Thought Checker')
@@ -66,8 +65,18 @@ with st.sidebar:
 
     st.markdown("<div style='text-align: center;'>"
                 "<h2>🧪🤖 100 GenAI Projects</h2>"
-                "<p>Sign up to <a href='https://fairylightsai.substack.com/' target='_blank'>newsletter</a> for new possibilities"
+                "<p>A truly magical time to be alive! 🤯</p>"
                 "</div>", unsafe_allow_html=True)
+
+    with st.expander("Fairylights Newsletter"):
+      st.markdown(
+          """
+          <div style="display: flex; justify-content: center;">
+              <iframe src="https://fairylightsai.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+          </div>
+          """,
+          unsafe_allow_html=True
+      )
 
     openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
 
