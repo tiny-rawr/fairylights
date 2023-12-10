@@ -9,11 +9,14 @@ def process_journal_entry():
     # Form submission button
     submitted = st.form_submit_button('Submit')
     if submitted:
-      st.info("(1/2) Identifying all thinking patterns in your journal entry...")
+      info_placeholder = st.empty()
+
+      info_placeholder.info("(1/2) Identifying all thinking patterns in your journal entry...")
       cognitive_distortions = identify_cognitive_distortions(journal_text)
-      st.info("(2/2) Explaining and reframing...")
+      info_placeholder.info("(2/2) Explaining and reframing...")
       distortions = categorise_cognitive_distortions(cognitive_distortions.get("quotes"))
       distortions_by_category = {}
+      info_placeholder.empty()
 
       for pattern in distortions.get("thinking_patterns"):
           category = pattern.get("thinking_pattern")
