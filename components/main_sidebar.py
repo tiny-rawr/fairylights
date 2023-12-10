@@ -47,19 +47,18 @@ def sidebar():
 
         openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
 
-        with st.expander("Filter project by tools used"):
-            show_published = st.checkbox("Show Published Projects", True)
-
+        with st.expander("Filter projects by tools used"):
             selected_tags = []
             all_tags = get_unique_tags()
 
-            # Count the number of projects per tag
-            tag_counts = {tag: sum(tag in project["tags"] for project in projects.values()) for tag in all_tags}
+            # Count the number of projects per tag for published projects
+            tag_counts = {tag: sum(tag in project["tags"] for project in projects.values() if project.get("published", False)) for tag in all_tags}
 
             for tag in all_tags:
-                tag_label = f"{tag} ({tag_counts[tag]})"
-                if st.checkbox(tag_label, key=tag):
-                    selected_tags.append(tag)
+                if tag_counts[tag] > 0:
+                    tag_label = f"{tag} ({tag_counts[tag]})"
+                    if st.checkbox(tag_label, key=tag):
+                        selected_tags.append(tag)
 
             if selected_tags:
                 filtered_projects = {name: proj for name, proj in projects.items() if
@@ -70,7 +69,3 @@ def sidebar():
     page = st.sidebar.radio("Try a project", list(filtered_projects.keys()))
 
     filtered_projects[page]["function"]()
-
-
-if __name__ == "__main__":
-    sidebar()
