@@ -51,7 +51,7 @@ def sidebar():
                 unsafe_allow_html=True
             )
 
-        openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
+        openai_api_key = st.text_input("Your OpenAI API Key:", type="password", placeholder="Enter your OpenAI API key")
 
         # Check if the API key is valid before storing it in session state
         if is_valid_api_key(openai_api_key):

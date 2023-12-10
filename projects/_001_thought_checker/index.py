@@ -1,4 +1,5 @@
 import streamlit as st
+from gpt_api_calls import identify_cognitive_distortions, categorise_cognitive_distortions
 
 def process_journal_entry():
   with st.form(key='thought_checker'):
@@ -8,8 +9,31 @@ def process_journal_entry():
     # Form submission button
     submitted = st.form_submit_button('Submit')
     if submitted:
-      st.write('You have submitted the following journal entry:')
-      st.write(journal_text)
+      cognitive_distortions = identify_cognitive_distortions(journal_text)
+      distortions = categorise_cognitive_distortions(cognitive_distortions)
+      distortions_by_category = {}
+
+      for pattern in distortions.get("thinking_patterns"):
+          category = pattern.get("thinking_pattern")
+          quote = pattern.get("quote")
+          explanation = pattern.get("explanation")
+          reframe = pattern.get("reframe")
+
+          if category not in distortions_by_category:
+              distortions_by_category[category] = []
+          distortions_by_category[category].append((quote, explanation, reframe))
+
+      # Sort the categories by the number of entries (in descending order)
+      sorted_categories = sorted(distortions_by_category.items(), key=lambda x: len(x[1]), reverse=True)
+
+      # Display the categories in sorted order
+      for category, entries in sorted_categories:
+          with st.expander(f"{category} (x {len(entries)})"):
+              for entry in entries:
+                  st.markdown(f"- **\"{entry[0][0].upper() + entry[0][1:]}\"** - {entry[1]} <span style='background-color: #FEE3C0;'>{entry[2]}</span>", unsafe_allow_html=True)
+
+
+
 
 
 def thought_checker():
