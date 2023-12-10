@@ -1,14 +1,26 @@
 import streamlit as st
 from gpt_api_calls import identify_cognitive_distortions, categorise_cognitive_distortions
 
-def process_journal_entry():
-  with st.form(key='thought_checker'):
-    default_journal_entry = """Today was terrible, just like every other day. It started off with me burning my toast—what a perfect example of how I can't do anything right. Clearly, I'm a total failure, not just in toasting bread but in life. I'm so clumsy and useless; it's no wonder people don't want to be around me.\n\nI got to work late because of traffic. As I walked in, I caught a glimpse of my boss's face, and I knew he was thinking, "Here's that useless employee who can't even show up on time." Everyone at work must hate me; it's the only explanation. To top it off, a meeting was scheduled for tomorrow, and I'm convinced it's going to be about laying people off. I'm sure I'll be the first one to go.\n\nMy colleague complimented me on my presentation, but she was just being nice. Any idiot could have done it, and it probably didn't even matter because I stuttered during the Q&A. My whole career is a joke, built on some lucky breaks."""
-    journal_text = st.text_area("Journal entry:", value=default_journal_entry, height=300, max_chars=2000)
 
-    # Form submission button
-    submitted = st.form_submit_button('Submit')
-    if submitted:
+def get_journal_entry():
+    form_submission = False
+
+    if not form_submission:
+        form_container = st.empty()
+
+        with form_container.form(key='thought_checker'):
+            default_journal_entry = """Today was terrible, just like every other day. It started off with me burning my toast—what a perfect example of how I can't do anything right. Clearly, I'm a total failure, not just in toasting bread but in life. I'm so clumsy and useless; it's no wonder people don't want to be around me.\n\nI got to work late because of traffic. As I walked in, I caught a glimpse of my boss's face, and I knew he was thinking, "Here's that useless employee who can't even show up on time." Everyone at work must hate me; it's the only explanation. To top it off, a meeting was scheduled for tomorrow, and I'm convinced it's going to be about laying people off. I'm sure I'll be the first one to go.\n\nMy colleague complimented me on my presentation, but she was just being nice. Any idiot could have done it, and it probably didn't even matter because I stuttered during the Q&A. My whole career is a joke, built on some lucky breaks."""
+            journal_text = st.text_area("Journal entry:", value=default_journal_entry, height=300, max_chars=2000)
+            submitted = st.form_submit_button('Submit')
+
+        if submitted:
+            form_submission = True
+            form_container.empty()  # Clear the form container
+
+    if form_submission:
+        return journal_text
+
+def process_journal_entry(journal_text):
       info_placeholder = st.empty()
 
       info_placeholder.info("(1/2) Identifying all thinking patterns in your journal entry...")
@@ -44,4 +56,7 @@ def process_journal_entry():
 def thought_checker():
     st.title('🧠 Thought Checker')
     st.write('Enter a journal entry, and this program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on the more helpful reframing part.')
-    process_journal_entry()
+    journal_text = get_journal_entry()
+    if journal_text:
+      st.markdown(f"<div style='padding: 20px 20px 10px 20px; border-radius: 5px; background: #F0F2F6'>{journal_text}</div>", unsafe_allow_html=True)
+    #process_journal_entry(journal_text)
