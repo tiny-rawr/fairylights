@@ -66,6 +66,8 @@ def sidebar():
             else:
                 filtered_projects = {name: proj for name, proj in projects.items() if proj.get("published", False)}
 
-    page = st.sidebar.radio("Try a project", list(filtered_projects.keys()))
+    default_project = "Thought Checker"
+
+    page = st.sidebar.radio("Try a project", list(filtered_projects.keys()), index=list(filtered_projects.keys()).index(default_project))
 
     filtered_projects[page]["function"]()
