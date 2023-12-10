@@ -6,6 +6,12 @@ from projects._003_pitch_panda.index import pitch_panda
 from projects._004_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._005_character_profiles.index import character_profiles
 
+def is_valid_api_key(api_key):
+    if api_key.startswith("sk-") and len(api_key) == 51:
+        return True
+    else:
+        return False
+
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
     "Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
@@ -46,6 +52,12 @@ def sidebar():
             )
 
         openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
+
+        # Check if the API key is valid before storing it in session state
+        if is_valid_api_key(openai_api_key):
+            st.session_state.api_key = openai_api_key
+        else:
+            st.error("Please enter a valid OpenAI API key.")
 
         with st.expander("Filter projects by tools used"):
             selected_tags = []
