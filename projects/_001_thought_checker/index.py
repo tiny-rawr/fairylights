@@ -9,8 +9,10 @@ def process_journal_entry():
     # Form submission button
     submitted = st.form_submit_button('Submit')
     if submitted:
+      st.info("(1/2) Identifying all thinking patterns in your journal entry...")
       cognitive_distortions = identify_cognitive_distortions(journal_text)
-      distortions = categorise_cognitive_distortions(cognitive_distortions)
+      st.info("(2/2) Explaining and reframing...")
+      distortions = categorise_cognitive_distortions(cognitive_distortions.get("quotes"))
       distortions_by_category = {}
 
       for pattern in distortions.get("thinking_patterns"):
@@ -30,7 +32,7 @@ def process_journal_entry():
       for category, entries in sorted_categories:
           with st.expander(f"{category} (x {len(entries)})"):
               for entry in entries:
-                  st.markdown(f"- **\"{entry[0][0].upper() + entry[0][1:]}\"** - {entry[1]} <span style='background-color: #FEE3C0;'>{entry[2]}</span>", unsafe_allow_html=True)
+                  st.markdown(f"- **\"{entry[0][0].upper() + entry[0][1:]}\"** - {entry[1]} \n<span style='background: #C7F5F0;'>{entry[2]}</span>", unsafe_allow_html=True)
 
 
 

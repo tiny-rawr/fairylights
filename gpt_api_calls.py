@@ -18,7 +18,7 @@ def identify_cognitive_distortions(journal_entry):
           "type": "function",
           "function": {
             "name": "identify_cognitive_distortions",
-            "description": "Identifies all cognitive distortion present in a journal entry.",
+            "description": "Identifies all cognitive distortion present in a journal entry and complements journal entry provider.",
             "parameters": {
               "type": "object",
               "properties": {
@@ -36,7 +36,7 @@ def identify_cognitive_distortions(journal_entry):
         }],
     )
 
-    return json.loads(response.choices[0].message.tool_calls[0].function.arguments).get('quotes')
+    return json.loads(response.choices[0].message.tool_calls[0].function.arguments)
 
 def categorise_cognitive_distortions(quotes):
     client = OpenAI()
@@ -76,7 +76,7 @@ def categorise_cognitive_distortions(quotes):
                                     },
                                     "explanation": {
                                         "type": "string",
-                                        "description": "Explain why this is an example of the thinking pattern, address the reader directly."
+                                        "description": "Explain to them why this is an example of the thinking pattern."
                                     },
                                     "reframe": {
                                         "type": "string",
