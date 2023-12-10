@@ -7,12 +7,12 @@ from projects._004_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._005_character_profiles.index import character_profiles
 
 projects = {
-    "Home": {"function": home, "tags": []},
-    "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"]},
-    "#2. Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"]},
-    "#3. Pitch Panda 🏆": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"]},
-    "#4. Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"]},
-    "#5. Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"]}
+    "Home": {"function": home, "tags": [], "published": True},
+    "Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
+    "Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
+    "🏆 Pitch Panda": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"], "published": False},
+    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
+    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"], "published": False}
 }
 
 
@@ -48,6 +48,8 @@ def sidebar():
         openai_api_key = st.text_input(" ", type="password", placeholder="Enter your OpenAI API key")
 
         with st.expander("Filter project by tools used"):
+            show_published = st.checkbox("Show Published Projects", True)
+
             selected_tags = []
             all_tags = get_unique_tags()
 
@@ -61,11 +63,14 @@ def sidebar():
 
             if selected_tags:
                 filtered_projects = {name: proj for name, proj in projects.items() if
-                                     any(tag in proj["tags"] for tag in selected_tags)}
+                                     proj.get("published", False) and any(tag in proj["tags"] for tag in selected_tags)}
             else:
-                filtered_projects = projects
-
+                filtered_projects = {name: proj for name, proj in projects.items() if proj.get("published", False)}
 
     page = st.sidebar.radio("Try a project", list(filtered_projects.keys()))
 
     filtered_projects[page]["function"]()
+
+
+if __name__ == "__main__":
+    sidebar()
