@@ -76,14 +76,10 @@ def categorise_cognitive_distortions(quotes):
                                     },
                                     "explanation": {
                                         "type": "string",
-                                        "description": "Explain to them why this is an example of the thinking pattern."
-                                    },
-                                    "reframe": {
-                                        "type": "string",
-                                        "description": "Reframe the thought in a more helpful and compassionate way to address the cognitive distortion."
+                                        "description": "Explain why this is an example of the thinking pattern and suggest a more helpful reframe."
                                     },
                                 },
-                                "required": ["quote", "thinking_pattern", "explanation", "reframe"]
+                                "required": ["quote", "thinking_pattern", "explanation"]
                             }
                         }
                     },

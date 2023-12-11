@@ -5,6 +5,7 @@ from projects._002_interview_analyser.index import interview_analyser
 from projects._003_pitch_panda.index import pitch_panda
 from projects._004_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._005_character_profiles.index import character_profiles
+import re
 
 def is_valid_api_key(api_key):
     if api_key.startswith("sk-") and len(api_key) == 51:
@@ -12,14 +13,35 @@ def is_valid_api_key(api_key):
     else:
         return False
 
+
+def create_slug(name):
+    # Convert to lowercase
+    slug = name.lower()
+
+    # Replace spaces with hyphens
+    slug = re.sub(r'\s+', '-', slug)
+
+    # Remove special characters
+    slug = re.sub(r'[^a-zA-Z0-9-]', '', slug)
+
+    return slug
+
+
+# Define the projects dictionary with dynamically generated slugs
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
     "Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
     "Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
     "🏆 Pitch Panda": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"], "published": False},
-    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
-    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"], "published": False}
+    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"],
+                              "published": False},
+    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"],
+                                    "published": False}
 }
+
+# Add slugs dynamically
+for project_name, project_data in projects.items():
+    project_data["slug"] = create_slug(project_name)
 
 
 def get_unique_tags():
