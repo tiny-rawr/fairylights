@@ -6,6 +6,11 @@ from projects._003_pitch_panda.index import pitch_panda
 from projects._004_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._005_character_profiles.index import character_profiles
 import re
+from mixpanel import Mixpanel
+
+mixpanel_token = st.secrets["mixpanel"]["token"]
+mp = Mixpanel(mixpanel_token)
+
 
 def is_valid_api_key(api_key):
     if api_key.startswith("sk-") and len(api_key) == 51:
@@ -108,9 +113,17 @@ def sidebar():
     default_index = project_names.index(default_project) if default_project in project_names else 0
 
     # Radio button for selecting a project
-    page = st.sidebar.radio("Try a project", project_names, index=default_index)
+    selected_project = st.sidebar.radio("Try a project", project_names, index=default_index)
+
+    # Check if the selection has changed
+    if 'selected_project' not in st.session_state or st.session_state['selected_project'] != selected_project:
+        mp.track(st.session_state['session_id'], 'Project Selected', {
+            'project_name': selected_project
+        })
+        st.session_state['selected_project'] = selected_project
+
     # Set the project query parameter in the URL when a project is selected
-    st.experimental_set_query_params(project=filtered_projects[page]["slug"])
+    st.experimental_set_query_params(project=filtered_projects[selected_project]["slug"])
 
     # Show the content associated with the selected project
-    filtered_projects[page]["function"]()
+    filtered_projects[selected_project]["function"]()
