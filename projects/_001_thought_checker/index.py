@@ -134,8 +134,13 @@ def thought_checker():
         quotes = identify_cognitive_distortions(journal_text).get("quotes")
 
         info_placeholder.info("(2/2) Explaining and reframing...")
-        distortions = categorise_cognitive_distortions(quotes)
+        if quotes:
+          distortions = categorise_cognitive_distortions(quotes)
 
-        info_placeholder.empty()
-        st.markdown(f"<div style='padding: 20px 20px 10px 20px; border-radius: 5px; background: #F0F2F6'>{highlight_text(journal_text, distortions)}</div>",unsafe_allow_html=True)
-        st.success("💖 Your turn. Choose the thinking pattern that causes you the most pain right now, then replace it with a positive and balanced affirmation. Use statements that reflect a more realistic and compassionate view of yourself and the situation.")
+          info_placeholder.empty()
+          st.markdown(f"<div style='padding: 20px 20px 10px 20px; border-radius: 5px; background: #F0F2F6'>{highlight_text(journal_text, distortions)}</div>",unsafe_allow_html=True)
+          st.success("💖 Your turn. Choose the thinking pattern that causes you the most pain right now, then replace it with a positive and balanced affirmation. Use statements that reflect a more realistic and compassionate view of yourself and the situation.")
+
+        else:
+            info_placeholder.info("No cognitive distortions found!")
+            return
