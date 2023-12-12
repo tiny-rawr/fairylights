@@ -6,6 +6,7 @@ def get_journal_entry():
     form_submission = False
 
     if not form_submission:
+
         form_container = st.empty()
 
         with form_container.form(key='thought_checker'):
@@ -85,7 +86,13 @@ def thought_checker():
 
     info_placeholder = st.empty()
     info_placeholder.info("We don't save or see any of your data, so once you refresh the page it'll be lost.")
+
     journal_text = get_journal_entry()
+    api_key = st.session_state.get('api_key', '')
+
+    if not api_key:
+        info_placeholder.error("Please enter an OpenAI API key in the sidebar.")
+        return
 
     if journal_text:
         info_placeholder.info("(1/2) Identifying all thinking patterns in your journal entry...")
