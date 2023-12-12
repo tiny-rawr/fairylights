@@ -90,9 +90,18 @@ def sidebar():
 
     url_param = st.experimental_get_query_params().get("project")
 
-    default_project_slug = url_param[0] if url_param and url_param[0] in [proj["slug"] for proj in projects.values()] else "home"
+    # Get the default project slug from the URL, fallback to 'home' if not found
+    default_project_slug = url_param[0] if url_param and url_param[0] in [proj["slug"] for proj in
+                                                                          projects.values()] else "home"
     default_project = next((name for name, proj in projects.items() if proj["slug"] == default_project_slug), None)
 
-    page = st.sidebar.radio("Try a project", list(filtered_projects.keys()), index=list(filtered_projects.keys()).index(default_project))
+    project_names = list(filtered_projects.keys())
+    default_index = project_names.index(default_project) if default_project in project_names else 0
 
+    # Radio button for selecting a project
+    page = st.sidebar.radio("Try a project", project_names, index=default_index)
+    # Set the project query parameter in the URL when a project is selected
+    st.experimental_set_query_params(project=filtered_projects[page]["slug"])
+
+    # Show the content associated with the selected project
     filtered_projects[page]["function"]()
