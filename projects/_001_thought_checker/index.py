@@ -77,9 +77,9 @@ def highlight_text(journal_entry, distortions):
 
 def thought_checker():
     st.title('🧠 Thought Checker')
-    st.markdown("Enter a journal entry and this program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")
+    st.markdown("Enter a journal entry and this GenAI program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")
     with st.expander("✨️  See Project Details"):
-      st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](#) with function calling (see [code snippet](#)).")
+      st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
       st.markdown("- 💖 **Pain Point Addressed:** Reading a journal entry multiple times trying to spot cognitive distortions is draining, and can reduce the likelihood of completing or attempting the exercise on low-energy/mood days. This program outsources the identification step, so all energy can go to the higher-impact reframing step.")
       st.markdown("- ⚠️ **Limitations:** 75% accuracy (still more helpful than not having the program at all). Sometimes labels factual or realistic statements as distortions, e.g. 'I will never see my cat again' can be flagged as 'fortune telling' when it's true (pet died).")
       st.markdown("- 💌 Read the full [behind-the-scenes build process here](#).")
@@ -91,7 +91,7 @@ def thought_checker():
     api_key = st.session_state.get('api_key', '')
 
     if not api_key:
-        info_placeholder.error("Please enter an OpenAI API key in the sidebar.")
+        info_placeholder.error("🔐  Please enter an OpenAI API key in the sidebar.")
         return
 
     if journal_text:
