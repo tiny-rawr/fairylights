@@ -3,8 +3,8 @@ import json
 import streamlit as st
 
 def identify_cognitive_distortions(journal_entry):
-    client = OpenAI()
-    client.api_key = st.session_state.api_key
+    api_key = st.session_state.api_key
+    client = OpenAI(api_key=api_key)
 
     conversation = [
         {"role": "system",
@@ -39,8 +39,8 @@ def identify_cognitive_distortions(journal_entry):
     return json.loads(response.choices[0].message.tool_calls[0].function.arguments)
 
 def categorise_cognitive_distortions(quotes):
-    client = OpenAI()
-    client.api_key = st.session_state.api_key
+    api_key = st.session_state.api_key
+    client = OpenAI(api_key=api_key)
 
     conversation = [
         {"role": "system",
