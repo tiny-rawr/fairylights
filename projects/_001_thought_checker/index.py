@@ -131,8 +131,7 @@ def thought_checker():
 
     if journal_text:
         info_placeholder.info("(1/2) Identifying all thinking patterns in your journal entry...")
-        response = identify_cognitive_distortions(journal_text)
-        quotes = response.get("quotes") if response.get("quotes") is not None else []
+        quotes = identify_cognitive_distortions(journal_text).get("quotes", [])
 
         info_placeholder.info("(2/2) Explaining and reframing...")
         if len(quotes) > 0:
