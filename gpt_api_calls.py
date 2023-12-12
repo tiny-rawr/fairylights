@@ -4,6 +4,7 @@ import streamlit as st
 
 def identify_cognitive_distortions(journal_entry):
     api_key = st.session_state.api_key
+    st.write(api_key)
     client = OpenAI(api_key=api_key)
 
     conversation = [

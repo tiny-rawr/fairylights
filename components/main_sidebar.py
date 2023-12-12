@@ -76,6 +76,7 @@ def sidebar():
         if st.session_state.api_key_input_attempted:
             if is_valid_api_key(openai_api_key):
                 st.session_state.api_key = openai_api_key
+                st.write(st.session_state.api_key)
             else:
                 st.error("Please enter a valid OpenAI API key.")
 
