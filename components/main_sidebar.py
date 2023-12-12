@@ -65,10 +65,17 @@ def sidebar():
 
         openai_api_key = st.text_input("Your OpenAI API Key:", type="password", placeholder="Enter your OpenAI API key")
 
-        if is_valid_api_key(openai_api_key):
-            st.session_state.api_key = openai_api_key
-        else:
-            st.error("Please enter a valid OpenAI API key.")
+        if 'api_key_input_attempted' not in st.session_state:
+            st.session_state.api_key_input_attempted = False
+
+        if openai_api_key:
+            st.session_state.api_key_input_attempted = True
+
+        if st.session_state.api_key_input_attempted:
+            if is_valid_api_key(openai_api_key):
+                st.session_state.api_key = openai_api_key
+            else:
+                st.error("Please enter a valid OpenAI API key.")
 
         with st.expander("Filter projects by tools used"):
             selected_tags = []
