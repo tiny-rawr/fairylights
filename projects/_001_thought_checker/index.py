@@ -134,7 +134,7 @@ def thought_checker():
         quotes = identify_cognitive_distortions(journal_text).get("quotes")
 
         info_placeholder.info("(2/2) Explaining and reframing...")
-        if quotes:
+        if len(quotes) > 0:
           distortions = categorise_cognitive_distortions(quotes)
 
           info_placeholder.empty()
