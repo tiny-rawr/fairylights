@@ -15,6 +15,8 @@ def is_valid_api_key(api_key):
 
 def create_slug(name):
     slug = name.lower()
+    # Remove patterns like "#1. "
+    slug = re.sub(r'#[0-9]+\.\s+', '', slug)
     slug = re.sub(r'\s+', '-', slug)
     # Remove special characters
     slug = re.sub(r'[^a-zA-Z0-9-]', '', slug)
@@ -24,7 +26,7 @@ def create_slug(name):
 # Define the projects dictionary with dynamically generated slugs
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
-    "Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
+    "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
     "Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
     "🏆 Pitch Panda": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"], "published": False},
     "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
