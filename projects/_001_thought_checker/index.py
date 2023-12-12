@@ -30,7 +30,6 @@ def get_journal_entry():
 
 
         if submitted:
-            # Track Text Input
             if journal_text != default_journal_entry:
                 mp.track(st.session_state['session_id'], 'Text Input', {
                     'page_name': 'Thought Checker',
@@ -39,7 +38,6 @@ def get_journal_entry():
                 })
             if journal_text == default_journal_entry:
                 mp.track(st.session_state['session_id'], 'Text Input', {
-                    'event': 'Text Entered in Journal Field',
                     'page_name': 'Thought Checker',
                     'type': 'demo',
                     'word_count': len(journal_text.split())
