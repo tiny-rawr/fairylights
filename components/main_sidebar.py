@@ -13,19 +13,13 @@ def is_valid_api_key(api_key):
     else:
         return False
 
-
 def create_slug(name):
-    # Convert to lowercase
     slug = name.lower()
-
-    # Replace spaces with hyphens
     slug = re.sub(r'\s+', '-', slug)
-
     # Remove special characters
     slug = re.sub(r'[^a-zA-Z0-9-]', '', slug)
 
     return slug
-
 
 # Define the projects dictionary with dynamically generated slugs
 projects = {
@@ -33,16 +27,13 @@ projects = {
     "Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
     "Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
     "🏆 Pitch Panda": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"], "published": False},
-    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"],
-                              "published": False},
-    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"],
-                                    "published": False}
+    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
+    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"], "published": False}
 }
 
 # Add slugs dynamically
 for project_name, project_data in projects.items():
     project_data["slug"] = create_slug(project_name)
-
 
 def get_unique_tags():
     unique_tags = set()
@@ -50,7 +41,6 @@ def get_unique_tags():
         for tag in project["tags"]:
             unique_tags.add(tag)
     return list(unique_tags)
-
 
 def sidebar():
     with st.sidebar:
@@ -75,7 +65,6 @@ def sidebar():
 
         openai_api_key = st.text_input("Your OpenAI API Key:", type="password", placeholder="Enter your OpenAI API key")
 
-        # Check if the API key is valid before storing it in session state
         if is_valid_api_key(openai_api_key):
             st.session_state.api_key = openai_api_key
         else:
@@ -85,7 +74,6 @@ def sidebar():
             selected_tags = []
             all_tags = get_unique_tags()
 
-            # Count the number of projects per tag for published projects
             tag_counts = {tag: sum(tag in project["tags"] for project in projects.values() if project.get("published", False)) for tag in all_tags}
 
             for tag in all_tags:
@@ -100,7 +88,9 @@ def sidebar():
             else:
                 filtered_projects = {name: proj for name, proj in projects.items() if proj.get("published", False)}
 
-    default_project_slug = "thought-checker"
+    url_param = st.experimental_get_query_params().get("project")
+
+    default_project_slug = url_param[0] if url_param and url_param[0] in [proj["slug"] for proj in projects.values()] else "home"
     default_project = next((name for name, proj in projects.items() if proj["slug"] == default_project_slug), None)
 
     page = st.sidebar.radio("Try a project", list(filtered_projects.keys()), index=list(filtered_projects.keys()).index(default_project))
