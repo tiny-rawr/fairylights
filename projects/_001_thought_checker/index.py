@@ -82,7 +82,7 @@ def thought_checker():
       st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
       st.markdown("- 💖 **Pain Point Addressed:** Reading a journal entry multiple times trying to spot cognitive distortions is draining, and can reduce the likelihood of completing or attempting the exercise on low-energy/mood days. This program outsources the identification step, so all energy can go to the higher-impact reframing step.")
       st.markdown("- ⚠️ **Limitations:** 75% accuracy (still more helpful than not having the program at all). Sometimes labels factual or realistic statements as distortions, e.g. 'I will never see my cat again' can be flagged as 'fortune telling' when it's true (pet died).")
-      st.markdown("- 💌 Read the full [behind-the-scenes build process here](#).")
+      st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/analyse-a-journal-entry-for-unhelpful).")
 
     info_placeholder = st.empty()
     info_placeholder.info("We don't save or see any of your data, so once you refresh the page it'll be lost.")
