@@ -46,7 +46,7 @@ def identify_cognitive_distortions(journal_entry):
         return json.loads(response.choices[0].message.tool_calls[0].function.arguments)
     else:
         # Handle the case where no data is present
-        return []
+        return { "quotes": [] }
 
 def categorise_cognitive_distortions(quotes):
     api_key = st.session_state.api_key
