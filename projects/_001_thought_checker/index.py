@@ -9,9 +9,10 @@ def get_journal_entry():
         form_container = st.empty()
 
         with form_container.form(key='thought_checker'):
-            default_journal_entry = """Today was terrible, just like every other day. It started off with me burning my toast—what a perfect example of how I can't do anything right. Clearly, I'm a total failure, not just in toasting bread but in life. I'm so clumsy and useless; it's no wonder people don't want to be around me.\n\nI got to work late because of traffic. As I walked in, I caught a glimpse of my boss's face, and I knew he was thinking, "Here's that useless employee who can't even show up on time." Everyone at work must hate me; it's the only explanation. To top it off, a meeting was scheduled for tomorrow, and I'm convinced it's going to be about laying people off. I'm sure I'll be the first one to go.\n\nMy colleague complimented me on my presentation, but she was just being nice. Any idiot could have done it, and it probably didn't even matter because I stuttered during the Q&A. My whole career is a joke, built on some lucky breaks."""
+            default_journal_entry = """(Replace this with your own journal entry if you want): \n\nToday was terrible, just like every other day. It started off with me burning my toast—what a perfect example of how I can't do anything right. Clearly, I'm a total failure, not just in toasting bread but in life. I'm so clumsy and useless; it's no wonder people don't want to be around me.\n\nI got to work late because of traffic. As I walked in, I caught a glimpse of my boss's face, and I knew he was thinking, "Here's that useless employee who can't even show up on time." Everyone at work must hate me; it's the only explanation. To top it off, a meeting was scheduled for tomorrow, and I'm convinced it's going to be about laying people off. I'm sure I'll be the first one to go.\n\nMy colleague complimented me on my presentation, but she was just being nice. Any idiot could have done it, and it probably didn't even matter because I stuttered during the Q&A. My whole career is a joke, built on some lucky breaks."""
             journal_text = st.text_area("Journal entry:", value=default_journal_entry, height=300, max_chars=2000)
             submitted = st.form_submit_button('Submit')
+            st.info("We don't save any of your data, so once you refresh the page it'll be lost.")
 
         if submitted:
             form_submission = True
@@ -76,7 +77,10 @@ def highlight_text(journal_entry, distortions):
 
 def thought_checker():
     st.title('🧠 Thought Checker')
-    st.write('Enter a journal entry, and this program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on the more helpful reframing part.')
+    st.write("Enter a journal entry, and this program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on the more helpful reframing part.")
+    with st.expander("✨️  See Project Details"):
+      st.markdown("💌 Read the full [behind-the-scenes build process here](#).")
+
     journal_text = get_journal_entry()
 
     if journal_text:
