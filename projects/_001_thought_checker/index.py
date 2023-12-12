@@ -1,5 +1,7 @@
 import streamlit as st
 from gpt_api_calls import identify_cognitive_distortions, categorise_cognitive_distortions
+from mixpanel import Mixpanel
+
 mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
 # Track Page View
