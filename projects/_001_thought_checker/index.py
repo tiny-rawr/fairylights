@@ -28,6 +28,8 @@ def get_journal_entry():
 
             submitted = st.form_submit_button('Submit')
 
+
+        if submitted:
             # Track Text Input
             if journal_text != default_journal_entry:
                 mp.track(st.session_state['session_id'], 'Text Input', {
@@ -43,8 +45,7 @@ def get_journal_entry():
                     'word_count': len(journal_text.split())
                 })
 
-        if submitted:
-            # Track the submit event with the length of the journal text
+            # Track the submit event
             mp.track(st.session_state['session_id'], 'Form Submitted', {
                 'event': 'Journal Entry Submitted',
                 'page_name': 'Thought Checker'
