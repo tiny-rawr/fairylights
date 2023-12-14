@@ -1,6 +1,11 @@
 import streamlit as st
 from gpt_api_calls import identify_cognitive_distortions, categorise_cognitive_distortions
 from mixpanel import Mixpanel
+import uuid
+
+# Check if 'session_id' is not in session_state and initialize it
+if 'session_id' not in st.session_state:
+    st.session_state['session_id'] = str(uuid.uuid4())
 
 mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
