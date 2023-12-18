@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit import session_state
-import streamlit.components.v1 as components
+import time
 
 interview = """----
 ⚠️ Replace this with your own transcript, or use this one as a demo
@@ -1297,6 +1297,10 @@ def analyse_transcripts():
         if not api_key:
             st.error("🔐  Please enter an OpenAI API key in the sidebar.")
             return
+
+    with st.spinner("Loading..."):
+        time.sleep(5)  # Sleep for 5 seconds as an example
+    st.success("Loading complete!")
 
 def add_question_form():
     if 'questions' not in st.session_state:
