@@ -147,5 +147,6 @@ def thought_checker():
           st.success("💖 Your turn. Choose the thinking pattern that causes you the most pain right now, then replace it with a positive and balanced affirmation. Use statements that reflect a more realistic and compassionate view of yourself and the situation.")
 
         else:
+            st.write(categorise_cognitive_distortions(quotes))
             info_placeholder.info("No cognitive distortions found!")
             return
