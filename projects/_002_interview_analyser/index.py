@@ -1325,7 +1325,7 @@ def add_question_form():
 
 def interview_analyser():
     st.title('🪖 Interview Analyser')
-    st.markdown("Upload interview transcripts, and this program will pull out direct quotes from the transcripts related to any question you want. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract quotes on specific topics.")
+    st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
     if not st.session_state.get('finished_uploading', False):
         with st.expander("✨️  See Project Details"):
             st.markdown("- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
