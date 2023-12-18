@@ -1289,18 +1289,10 @@ def finish_adding_questions():
 
 def analyse_transcripts():
     st.markdown("#### Step 3/3: Analyse transcripts")
-    submit_button = st.button("Analyse transcripts")
-
-    if submit_button:
-        api_key = st.session_state.get('api_key', '')
-
-        if not api_key:
-            st.error("🔐  Please enter an OpenAI API key in the sidebar.")
-            return
 
     with st.spinner("Loading..."):
         time.sleep(5)  # Sleep for 5 seconds as an example
-    st.success("Loading complete!")
+    st.success("Transcript analysis complete!")
 
 def add_question_form():
     if 'questions' not in st.session_state:
@@ -1325,7 +1317,13 @@ def add_question_form():
                 st.markdown(f"- {question}")
 
     if st.session_state.questions and not st.session_state.finished_adding_questions:
-        st.button("Finished adding questions", on_click=finish_adding_questions)
+        api_key = st.session_state.get('api_key', '')
+
+        if not api_key:
+            st.error("🔐  Please enter an OpenAI API key in the sidebar.")
+            return
+        else:
+            st.button("Finished adding questions", on_click=finish_adding_questions)
 
 def interview_analyser():
     st.title('🪖 Interview Analyser')
