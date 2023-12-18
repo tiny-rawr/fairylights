@@ -125,7 +125,7 @@ def thought_checker():
       st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/analyse-a-journal-entry-for-unhelpful).")
 
     info_placeholder = st.empty()
-    info_placeholder.warning("⚠️ This app is not a substitute for professional medical or mental health advice, diagnosis, or treatment 💖")
+    info_placeholder.warning("⚠️ This app is not a replacement for professional medical or mental health advice. For personalized guidance, please consult a qualified healthcare or mental health professional 💖")
 
     journal_text = get_journal_entry()
     api_key = st.session_state.get('api_key', '')
