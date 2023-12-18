@@ -1387,4 +1387,5 @@ def interview_analyser():
                 unsafe_allow_html=True
             )
 
-        add_question_form()
+        if st.session_state.finished_uploading:
+            add_question_form()
