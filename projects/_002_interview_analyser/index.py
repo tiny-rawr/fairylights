@@ -1306,8 +1306,15 @@ def interview_analyser():
 
     if st.button("Submit"):
         if transcript_text:
-            st.session_state.transcripts.append(transcript_text)
-            st.success("Transcript Added!")
+            if len(transcript_text) < 500:
+                st.error("Transcript must be at least 500 characters long.")
+            elif transcript_text in st.session_state.transcripts:
+                st.warning("This transcript has already been added.")
+            else:
+                st.session_state.transcripts.append(transcript_text)
+                st.success("Transcript Added!")
+        else:
+            st.error("Please enter a transcript before submitting.")
 
     if st.session_state.transcripts:
         transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
