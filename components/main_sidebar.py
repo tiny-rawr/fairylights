@@ -71,6 +71,7 @@ def sidebar():
             )
 
         openai_api_key = st.text_input("Your OpenAI API Key:", type="password", placeholder="Enter your OpenAI API key")
+        st.info("🔐 We don't save your API keys or any data you enter (it's lost on refresh)")
 
         if 'api_key_input_attempted' not in st.session_state:
             st.session_state.api_key_input_attempted = False
