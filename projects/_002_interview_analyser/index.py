@@ -1279,6 +1279,11 @@ Interviewer: Yeah. Was that in your view, was that representative of the Army or
 Dugan: Yeah. Yeah, it was on target.
 """
 
+def finish_uploading():
+    st.session_state.render_transcript_form = False
+    st.session_state.finished_uploading = True
+
+
 def add_question_form():
     # Initialize the questions list in session state if not present
     if 'questions' not in st.session_state:
@@ -1286,7 +1291,8 @@ def add_question_form():
 
     with st.form("question_form"):
         st.markdown("#### Step 2/3: Ask questions")
-        st.write("We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the miltary, or what users liked or disliked about a product or service, etc.")
+        st.write(
+            "We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the miltary, or what users liked or disliked about a product or service, etc.")
         question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
 
         # Submit button for the form
@@ -1314,6 +1320,7 @@ def add_question_form():
             st.error("🔐  Please enter an OpenAI API key in the sidebar.")
             return
 
+
 def interview_analyser():
     st.title('🪖 Interview Analyser')
     st.markdown(
@@ -1330,31 +1337,38 @@ def interview_analyser():
         st.markdown(
             "- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
 
-    info_placeholder = st.empty()
+        if 'render_transcript_form' not in st.session_state:
+            st.session_state.render_transcript_form = True
+        if 'finished_uploading' not in st.session_state:
+            st.session_state.finished_uploading = False
 
     if 'transcripts' not in st.session_state:
         st.session_state.transcripts = []
 
-    with st.form("transcript_form"):
-        st.markdown("#### Step 1/3: Upload your transcript/s")
-        st.write("E.g. Interviews with world war 2 veterans (demo example), user interviews for an app or product, YouTube transcripts, Podcast transcripts, Research papers and more.")
-        transcript_text = st.text_area("Paste Transcript Text (5000 characters max):",
+    if st.session_state.render_transcript_form:
+        with st.form("transcript_form"):
+            st.markdown("#### Step 1/3: Upload your transcript/s")
+            st.write("E.g. Interviews with world war 2 veterans (demo example), user interviews for an app or product, YouTube transcripts, Podcast transcripts, Research papers and more.")
+            transcript_text = st.text_area("Paste Transcript Text (5000 characters max):",
                                        height=200, max_chars=5000, value=interview)
 
-        # Submit button for the form
-        submit_button = st.form_submit_button("Add transcript")
+            # Submit button for the form
+            submit_button = st.form_submit_button("Add transcript")
 
-        if submit_button:
-            if transcript_text:
-                if len(transcript_text) < 500:
-                    st.error("Transcript must be at least 500 characters long.")
-                elif transcript_text in st.session_state.transcripts:
-                    st.warning("This transcript has already been added.")
+            if submit_button:
+                if transcript_text:
+                    if len(transcript_text) < 500:
+                        st.error("Transcript must be at least 500 characters long.")
+                    elif transcript_text in st.session_state.transcripts:
+                        st.warning("This transcript has already been added.")
+                    else:
+                        st.session_state.transcripts.append(transcript_text)
+                        st.success("Transcript Added!")
                 else:
-                    st.session_state.transcripts.append(transcript_text)
-                    st.success("Transcript Added!")
-            else:
-                st.error("Please enter a transcript before submitting.")
+                    st.error("Please enter a transcript before submitting.")
+
+    if not st.session_state.finished_uploading:
+        st.button("Finished uploading transcripts", on_click=finish_uploading)
 
     # Display transcripts if available
     if st.session_state.transcripts:
