@@ -125,7 +125,7 @@ def thought_checker():
       st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/analyse-a-journal-entry-for-unhelpful).")
 
     info_placeholder = st.empty()
-    info_placeholder.info("We don't save or see any of your data, so once you refresh the page it'll be lost.")
+    info_placeholder.warning("⚠️ This app is not a substitute for professional medical or mental health advice, diagnosis, or treatment 💖")
 
     journal_text = get_journal_entry()
     api_key = st.session_state.get('api_key', '')
