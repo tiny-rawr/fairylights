@@ -1315,30 +1315,25 @@ def add_question_form():
             if question_text not in st.session_state.questions:
                 # Add the new question/topic to the list
                 st.session_state.questions.append(question_text)
-                st.write("Added Questions/Topics:")
-                for question in st.session_state.questions:
-                    st.markdown(f"- {question}")
             else:
                 st.warning("You've already added this question")
+            st.write("Added Questions/Topics:")
+            for question in st.session_state.questions:
+                st.markdown(f"- {question}")
 
     if st.session_state.questions and not st.session_state.finished_adding_questions:
         st.button("Finished adding questions", on_click=finish_adding_questions)
 
 def interview_analyser():
     st.title('🪖 Interview Analyser')
-    st.markdown(
-        "Upload interview transcripts, and this program will pull out direct quotes from the transcripts related to any question you want. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract quotes on specific topics.")
-    with st.expander("✨️  See Project Details"):
-        st.markdown(
-            "- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
-        st.markdown(
-            "- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
-        st.markdown(
-            "- 💖 **Pain Point Addressed:** Instead of spending hours reading through user interview transcripts, pulling out quotes that are relevant to the questions/topics you care about, you can instead invest your energy in actioning the insights gained.")
-        st.markdown(
-            "- ⚠️ **Limitations:** You need to do a separate API call per question to get a more comprehensive list of quotes. You can ask multiple questions in a single call, but the more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
-        st.markdown(
-            "- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
+    st.markdown("Upload interview transcripts, and this program will pull out direct quotes from the transcripts related to any question you want. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract quotes on specific topics.")
+    if not st.session_state.get('finished_uploading', False):
+        with st.expander("✨️  See Project Details"):
+            st.markdown("- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
+            st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
+            st.markdown("- 💖 **Pain Point Addressed:** Instead of spending hours reading through user interview transcripts, pulling out quotes that are relevant to the questions/topics you care about, you can instead invest your energy in actioning the insights gained.")
+            st.markdown("- ⚠️ **Limitations:** You need to do a separate API call per question to get a more comprehensive list of quotes. You can ask multiple questions in a single call, but the more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
+            st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
 
         if 'render_transcript_form' not in st.session_state:
             st.session_state.render_transcript_form = True
@@ -1374,25 +1369,24 @@ def interview_analyser():
     if st.session_state.transcripts and not st.session_state.finished_uploading:
         st.button("Finished adding transcripts", on_click=finish_uploading)
 
-    # Display transcripts if available
-    if st.session_state.transcripts:
-        with st.expander("See uploaded transcripts"):
-            transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
-            selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
-
-            selected_index = transcript_labels.index(selected_transcript_index)
-            st.markdown(f"#### Transcript {selected_index + 1}")
-            st.markdown(
-                f"""
-                <div style="overflow-y: scroll; height: 300px;">
-                    {st.session_state.transcripts[selected_index]}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
     # Step 2: Add Questions Form
     if st.session_state.finished_uploading and not st.session_state.finished_adding_questions:
+        # Display transcripts if available
+        if st.session_state.transcripts:
+            with st.expander("👀 See uploaded transcripts"):
+                transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
+                selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
+
+                selected_index = transcript_labels.index(selected_transcript_index)
+                st.markdown(f"#### Transcript {selected_index + 1}")
+                st.markdown(
+                    f"""
+                        <div style="overflow-y: scroll; height: 300px;">
+                            {st.session_state.transcripts[selected_index]}
+                        </div>
+                        """,
+                    unsafe_allow_html=True
+                )
         add_question_form()
 
     # Step 3: Analyse Transcripts
