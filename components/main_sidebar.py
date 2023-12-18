@@ -2,9 +2,7 @@ import streamlit as st
 from pages.home.index import home
 from projects._001_thought_checker.index import thought_checker
 from projects._002_interview_analyser.index import interview_analyser
-from projects._003_pitch_panda.index import pitch_panda
-from projects._004_ask_your_spreadsheets.index import ask_your_spreadsheets
-from projects._005_character_profiles.index import character_profiles
+from projects._003_ask_your_spreadsheets.index import ask_your_spreadsheets
 import re
 from mixpanel import Mixpanel
 
@@ -32,10 +30,8 @@ def create_slug(name):
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
     "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
-    "Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
-    "🏆 Pitch Panda": {"function": pitch_panda, "tags": ["OpenAI", "Eleven Labs", "Raspberry Pi"], "published": False},
-    "Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
-    "Generate character profiles": {"function": character_profiles, "tags": ["OpenAI", "Web Scraping", "Streamlit"], "published": False}
+    "#2. Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": True},
+    "#3. Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
 }
 
 # Add slugs dynamically
