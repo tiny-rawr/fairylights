@@ -1283,33 +1283,11 @@ def finish_uploading():
     st.session_state.render_transcript_form = False
     st.session_state.finished_uploading = True
 
+def finish_adding_questions():
+    st.session_state.render_questions_form = False
+    st.session_state.finished_adding_questions = True
 
-def add_question_form():
-    # Initialize the questions list in session state if not present
-    if 'questions' not in st.session_state:
-        st.session_state.questions = []
-
-    with st.form("question_form"):
-        st.markdown("#### Step 2/3: Ask questions")
-        st.write(
-            "We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the miltary, or what users liked or disliked about a product or service, etc.")
-        question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
-
-        # Submit button for the form
-        submit_button = st.form_submit_button("Add question")
-
-        if submit_button and question_text:
-            if question_text not in st.session_state.questions:
-                # Add the new question/topic to the list
-                st.session_state.questions.append(question_text)
-                if st.session_state.questions:
-                    st.write("Added Questions/Topics:")
-            else:
-                st.warning("You've already added this question")
-
-            for question in st.session_state.questions:
-                st.markdown(f"- {question}")
-
+def analyse_transcripts():
     st.markdown("#### Step 3/3: Analyse transcripts")
     submit_button = st.button("Analyse transcripts")
 
@@ -1320,6 +1298,31 @@ def add_question_form():
             st.error("🔐  Please enter an OpenAI API key in the sidebar.")
             return
 
+def add_question_form():
+    if 'questions' not in st.session_state:
+        st.session_state.questions = []
+
+    with st.form("question_form"):
+        st.markdown("#### Step 2/3: Ask questions")
+        st.write(
+            "We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the military, or what users liked or disliked about a product or service, etc.")
+        question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
+
+        # Submit button for the form
+        submit_button = st.form_submit_button("Add question")
+
+        if submit_button and question_text:
+            if question_text not in st.session_state.questions:
+                # Add the new question/topic to the list
+                st.session_state.questions.append(question_text)
+                st.write("Added Questions/Topics:")
+                for question in st.session_state.questions:
+                    st.markdown(f"- {question}")
+            else:
+                st.warning("You've already added this question")
+
+    if st.session_state.questions and not st.session_state.finished_adding_questions:
+        st.button("Finished adding questions", on_click=finish_adding_questions)
 
 def interview_analyser():
     st.title('🪖 Interview Analyser')
@@ -1341,6 +1344,8 @@ def interview_analyser():
             st.session_state.render_transcript_form = True
         if 'finished_uploading' not in st.session_state:
             st.session_state.finished_uploading = False
+        if 'finished_adding_questions' not in st.session_state:
+            st.session_state.finished_adding_questions = False
 
     if 'transcripts' not in st.session_state:
         st.session_state.transcripts = []
@@ -1363,12 +1368,11 @@ def interview_analyser():
                         st.warning("This transcript has already been added.")
                     else:
                         st.session_state.transcripts.append(transcript_text)
-                        st.success("Transcript Added!")
                 else:
                     st.error("Please enter a transcript before submitting.")
 
-    if not st.session_state.finished_uploading:
-        st.button("Finished uploading transcripts", on_click=finish_uploading)
+    if st.session_state.transcripts and not st.session_state.finished_uploading:
+        st.button("Finished adding transcripts", on_click=finish_uploading)
 
     # Display transcripts if available
     if st.session_state.transcripts:
@@ -1387,5 +1391,10 @@ def interview_analyser():
                 unsafe_allow_html=True
             )
 
-        if st.session_state.finished_uploading:
-            add_question_form()
+    # Step 2: Add Questions Form
+    if st.session_state.finished_uploading and not st.session_state.finished_adding_questions:
+        add_question_form()
+
+    # Step 3: Analyse Transcripts
+    if st.session_state.finished_adding_questions:
+        analyse_transcripts()
