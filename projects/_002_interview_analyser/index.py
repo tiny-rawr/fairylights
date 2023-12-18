@@ -1279,6 +1279,40 @@ Interviewer: Yeah. Was that in your view, was that representative of the Army or
 Dugan: Yeah. Yeah, it was on target.
 """
 
+def add_question_form():
+    # Initialize the questions list in session state if not present
+    if 'questions' not in st.session_state:
+        st.session_state.questions = []
+
+    with st.form("question_form"):
+        st.markdown("#### Step 2/3: Ask questions")
+        st.write("We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the miltary, or what users liked or disliked about a product or service, etc.")
+        question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
+
+        # Submit button for the form
+        submit_button = st.form_submit_button("Add question")
+
+        if submit_button and question_text:
+            if question_text not in st.session_state.questions:
+                # Add the new question/topic to the list
+                st.session_state.questions.append(question_text)
+                if st.session_state.questions:
+                    st.write("Added Questions/Topics:")
+            else:
+                st.warning("You've already added this question")
+
+            for question in st.session_state.questions:
+                st.markdown(f"- {question}")
+
+    st.markdown("#### Step 3/3: Analyse transcripts")
+    submit_button = st.button("Analyse transcripts")
+
+    if submit_button:
+        api_key = st.session_state.get('api_key', '')
+
+        if not api_key:
+            st.error("🔐  Please enter an OpenAI API key in the sidebar.")
+            return
 
 def interview_analyser():
     st.title('🪖 Interview Analyser')
@@ -1302,6 +1336,8 @@ def interview_analyser():
         st.session_state.transcripts = []
 
     with st.form("transcript_form"):
+        st.markdown("#### Step 1/3: Upload your transcript/s")
+        st.write("E.g. Interviews with world war 2 veterans (demo example), user interviews for an app or product, YouTube transcripts, Podcast transcripts, Research papers and more.")
         transcript_text = st.text_area("Paste Transcript Text (5000 characters max):",
                                        height=200, max_chars=5000, value=interview)
 
@@ -1337,10 +1373,4 @@ def interview_analyser():
                 unsafe_allow_html=True
             )
 
-
-
-    api_key = st.session_state.get('api_key', '')
-
-    if not api_key:
-      info_placeholder.error("🔐  Please enter an OpenAI API key in the sidebar.")
-      return
+        add_question_form()
