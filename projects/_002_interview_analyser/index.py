@@ -1304,8 +1304,7 @@ def add_question_form():
 
     with st.form("question_form"):
         st.markdown("#### Step 2/3: Ask questions")
-        st.write(
-            "We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the military, or what users liked or disliked about a product or service, etc.")
+        st.info("We will use your questions/topics to pull relevant quotes from the transcript/s you've uploaded. For example, you might want to get an overview of why many different world war 2 veterans joined the military, or what users liked or disliked about a product or service, etc.")
         question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
 
         # Submit button for the form
@@ -1348,7 +1347,7 @@ def interview_analyser():
     if st.session_state.render_transcript_form:
         with st.form("transcript_form"):
             st.markdown("#### Step 1/3: Upload your transcript/s")
-            st.write("E.g. Interviews with world war 2 veterans (demo example), user interviews for an app or product, YouTube transcripts, Podcast transcripts, Research papers and more.")
+            st.info("You could upload interviews with world war 2 veterans (like this demo example), user interviews for an app or product, YouTube transcripts, Podcast transcripts, Research papers and more.")
             transcript_text = st.text_area("Paste Transcript Text (5000 characters max):",
                                        height=200, max_chars=5000, value=interview)
 
