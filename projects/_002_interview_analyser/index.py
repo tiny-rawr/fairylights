@@ -1298,38 +1298,45 @@ def interview_analyser():
 
     info_placeholder = st.empty()
 
-    transcript_text = st.text_area("Paste Transcript Text (5000 characters max):", height=200, max_chars=5000,
-                                   value=interview)
-
     if 'transcripts' not in st.session_state:
         st.session_state.transcripts = []
 
-    if st.button("Submit"):
-        if transcript_text:
-            if len(transcript_text) < 500:
-                st.error("Transcript must be at least 500 characters long.")
-            elif transcript_text in st.session_state.transcripts:
-                st.warning("This transcript has already been added.")
+    with st.form("transcript_form"):
+        transcript_text = st.text_area("Paste Transcript Text (5000 characters max):",
+                                       height=200, max_chars=5000, value=interview)
+
+        # Submit button for the form
+        submit_button = st.form_submit_button("Add transcript")
+
+        if submit_button:
+            if transcript_text:
+                if len(transcript_text) < 500:
+                    st.error("Transcript must be at least 500 characters long.")
+                elif transcript_text in st.session_state.transcripts:
+                    st.warning("This transcript has already been added.")
+                else:
+                    st.session_state.transcripts.append(transcript_text)
+                    st.success("Transcript Added!")
             else:
-                st.session_state.transcripts.append(transcript_text)
-                st.success("Transcript Added!")
-        else:
-            st.error("Please enter a transcript before submitting.")
+                st.error("Please enter a transcript before submitting.")
 
+    # Display transcripts if available
     if st.session_state.transcripts:
-        transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
-        selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
+        with st.expander("See uploaded transcripts"):
+            transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
+            selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
 
-        selected_index = transcript_labels.index(selected_transcript_index)
-        st.markdown(f"#### Transcript {selected_index + 1}")
-        st.markdown(
-            f"""
-                        <div style="overflow-y: scroll; height: 300px;">
-                            {st.session_state.transcripts[selected_index]}
-                        </div>
-                        """,
-            unsafe_allow_html=True
-        )
+            selected_index = transcript_labels.index(selected_transcript_index)
+            st.markdown(f"#### Transcript {selected_index + 1}")
+            st.markdown(
+                f"""
+                <div style="overflow-y: scroll; height: 300px;">
+                    {st.session_state.transcripts[selected_index]}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
 
 
     api_key = st.session_state.get('api_key', '')
