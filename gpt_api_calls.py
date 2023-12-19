@@ -39,7 +39,7 @@ def identify_cognitive_distortions(journal_entry):
         }],
     )
 
-    mp.track("OpenAI API Call", {
+    mp.track(st.session_state['session_id'], "OpenAI API Call", {
         "event": "OpenAI API Call",
         "Model": response.model,
         "Project": "Thought Checker",
@@ -108,7 +108,7 @@ def categorise_cognitive_distortions(quotes):
                 },
             }],
         )
-        mp.track("OpenAI API Call", {
+        mp.track(st.session_state['session_id'], "OpenAI API Call", {
             "event": "OpenAI API Call",
             "Model": response.model,
             "Project": "Thought Checker",
