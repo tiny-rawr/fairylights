@@ -39,7 +39,7 @@ def identify_cognitive_distortions(journal_entry):
         }],
     )
 
-    mp.track("API Call", {
+    mp.track("OpenAI API Call", {
         "Model": response.model,
         "Project": "Thought Checker",
         "Method": "identify_cognitive_distortions",
@@ -107,6 +107,14 @@ def categorise_cognitive_distortions(quotes):
                 },
             }],
         )
+        mp.track("OpenAI API Call", {
+            "Model": response.model,
+            "Project": "Thought Checker",
+            "Method": "categorise_cognitive_distortions",
+            "Input tokens": response.usage.prompt_tokens,
+            "Output tokens": response.usage.completion_tokens
+        })
+
         return json.loads(response.choices[0].message.tool_calls[0].function.arguments)
     else:
         return {"thinking_patterns": []}
