@@ -1,7 +1,9 @@
 from openai import OpenAI
 import json
 import streamlit as st
+from mixpanel import Mixpanel
 
+mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
 def identify_cognitive_distortions(journal_entry):
     api_key = st.session_state.api_key
@@ -36,6 +38,14 @@ def identify_cognitive_distortions(journal_entry):
             },
         }],
     )
+
+    mp.track("API Call", {
+        "Model": response.model,
+        "Project": "Thought Checker",
+        "Method": "identify_cognitive_distortions",
+        "Input tokens": response.usage.prompt_tokens,
+        "Output tokens": response.usage.completion_tokens
+    })
 
     response_message = response.choices[0].message
     tool_calls = response_message.tool_calls
@@ -106,5 +116,5 @@ if __name__ == "__main__":
     entry = "I really like cats"
     quotes = identify_cognitive_distortions(entry)
     print(quotes)
-    distortions = categorise_cognitive_distortions(quotes)
-    print(distortions)
+    #distortions = categorise_cognitive_distortions(quotes)
+    #print(distortions)
