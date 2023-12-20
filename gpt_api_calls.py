@@ -2,8 +2,15 @@ from openai import OpenAI
 import json
 import streamlit as st
 from mixpanel import Mixpanel
+import re
 
 mp = Mixpanel(st.secrets["mixpanel"]["token"])
+
+def create_key_name(text):
+    text = re.sub(r'[^\x00-\x7F]+', '', text)
+    text = re.sub(r'[^\w\s]', '', text)
+    text = re.sub(r'[\s\t\n\r]{2,}', ' ', text)
+    return re.sub(r'[ -]', '_', text.lower().strip())
 
 def generate_properties(questions):
     properties = {
@@ -14,8 +21,8 @@ def generate_properties(questions):
     }
 
     for question in questions:
-        description = f"A direct quote from the interview that is relevant to the question '{question}'. Use direct quotes only."
-        properties["interview"]["properties"][question] = {
+        description = f"A direct quote from the interview that is relevant to '{question}'. Use direct quote only."
+        properties["interview"]["properties"][create_key_name(question)] = {
             "type": "array",
             "items": {
                 "type": "string",
@@ -30,8 +37,8 @@ def pull_quotes_from_transcript(questions, transcript):
     client = OpenAI(api_key=api_key)
 
     conversation = [
-        {"role": "system", "content": "You extract direct quotes from a transcript that are directly relevant to specific questions/topics provided."},
-        {"role": "user", "content": transcript}
+        {"role": "system", "content": f"You extract direct relevant quotes for the following transcript based on these: {questions}. This is the transcript"},
+        {"role": "user", "content": transcript},
     ]
 
     response = client.chat.completions.create(
@@ -41,11 +48,12 @@ def pull_quotes_from_transcript(questions, transcript):
             "type": "function",
             "function": {
                 "name": "extract_quotes_from_transcript",
-                "description": "Extracts direct quotes from a transcript that are related to provided questions/topics.",
+                "description": "Extracts direct relevant quote/s from a transcript.",
                 "parameters": {
                     "type": "object",
-                    "properties": generate_properties(questions)
-                }
+                    "properties": generate_properties(questions),
+                },
+                "required": ["interview"],
             }
         }]
     )
@@ -81,7 +89,7 @@ def identify_cognitive_distortions(journal_entry):
                             "type": "array",
                             "items": {
                                 "type": "string",
-                                "description": "A direct quote from the journal entry that represents a cognitive distortion"
+                                "description": "A direct quote from the journal entry that represents a cognitive distortion."
                             }
                         }
                     },
@@ -175,8 +183,13 @@ def categorise_cognitive_distortions(quotes):
 
 
 if __name__ == "__main__":
-    entry = "I really like cats"
-    quotes = identify_cognitive_distortions(entry)
+    questions = ["What motivated you to join the army?"]
+    #print(generate_properties(questions))
+
+
+    #questions = ["What motivated you to join the army?", "What did you do while in the army", "What was your training like?"]
+    #questions = ["What motivated you to join the army?", "What did you do while in the army"]
+    questions = ["What motivated you to join the army?"]
+    print(generate_properties(questions))
+    quotes = pull_quotes_from_transcript(questions, interview)
     print(quotes)
-    #distortions = categorise_cognitive_distortions(quotes)
-    #print(distortions)

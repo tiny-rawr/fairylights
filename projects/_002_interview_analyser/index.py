@@ -1292,7 +1292,8 @@ def analyse_transcripts(questions, transcripts):
     progress = st.empty()
     for index, transcript in enumerate(transcripts, start=1):
         progress.info(f"Analysing {index}/{len(transcripts)} transcripts")
-        return pull_quotes_from_transcript(questions, transcript)
+        transcript_quotes = pull_quotes_from_transcript(questions, transcript)
+        st.write(f"{transcript_quotes}")
 
     progress.success("Finished analysing transcripts")
 
