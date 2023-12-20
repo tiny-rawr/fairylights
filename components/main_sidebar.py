@@ -25,7 +25,7 @@ def create_slug(name):
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
     "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI", "Streamlit"], "published": True},
-    "#2. Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": false},
+    "#2. Interview Analyser": {"function": interview_analyser, "tags": ["OpenAI", "Streamlit"], "published": False},
     "#3. Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas", "Streamlit"], "published": False},
 }
 
