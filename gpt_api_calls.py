@@ -5,6 +5,58 @@ from mixpanel import Mixpanel
 
 mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
+def generate_properties(questions):
+    properties = {
+        "interview": {
+            "type": "object",
+            "properties": {}
+        }
+    }
+
+    for question in questions:
+        description = f"A direct quote from the interview that is relevant to the question '{question}'. Use direct quotes only."
+        properties["interview"]["properties"][question] = {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": description
+            }
+        }
+
+    return properties
+
+def pull_quotes_from_transcript(questions, transcript):
+    api_key = st.session_state.api_key
+    client = OpenAI(api_key=api_key)
+
+    conversation = [
+        {"role": "system", "content": "You extract direct quotes from a transcript that are directly relevant to specific questions/topics provided."},
+        {"role": "user", "content": transcript}
+    ]
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-Turbo",
+        messages=conversation,
+        tools=[{
+            "type": "function",
+            "function": {
+                "name": "extract_quotes_from_transcript",
+                "description": "Extracts direct quotes from a transcript that are related to provided questions/topics.",
+                "parameters": {
+                    "type": "object",
+                    "properties": generate_properties(questions)
+                }
+            }
+        }]
+    )
+
+    response_message = response.choices[0].message
+    tool_calls = response_message.tool_calls
+    if tool_calls:
+        return json.loads(response.choices[0].message.tool_calls[0].function.arguments)
+    else:
+        return {"interview": []}
+
 def identify_cognitive_distortions(journal_entry):
     api_key = st.session_state.api_key
     client = OpenAI(api_key=api_key)
@@ -15,7 +67,7 @@ def identify_cognitive_distortions(journal_entry):
         {"role": "user", "content": journal_entry},
     ]
     response = client.chat.completions.create(
-        model="gpt-3.5-Turbo-1106",
+        model="gpt-3.5-Turbo",
         messages=conversation,
         tools=[{
             "type": "function",
@@ -68,7 +120,7 @@ def categorise_cognitive_distortions(quotes):
             {"role": "user", "content": str(quotes)},
         ]
         response = client.chat.completions.create(
-            model="gpt-3.5-Turbo-1106",
+            model="gpt-3.5-Turbo",
             messages=conversation,
             tools=[{
                 "type": "function",

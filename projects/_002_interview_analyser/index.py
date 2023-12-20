@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit import session_state
 import time
+from gpt_api_calls import pull_quotes_from_transcript
 
 interview = """----
 ⚠️ Replace this with your own transcript, or use this one as a demo
@@ -1287,12 +1288,17 @@ def finish_adding_questions():
     st.session_state.render_questions_form = False
     st.session_state.finished_adding_questions = True
 
-def analyse_transcripts():
-    st.markdown("#### Step 3/3: Analyse transcripts")
+def analyse_transcripts(questions, transcripts):
+    progress = st.empty()
+    for index, transcript in enumerate(transcripts, start=1):
+        progress.info(f"Analysing {index}/{len(transcripts)} transcripts")
+        return pull_quotes_from_transcript(questions, transcript)
 
-    with st.spinner("Loading..."):
-        time.sleep(5)  # Sleep for 5 seconds as an example
-    st.success("Transcript analysis complete!")
+    progress.success("Finished analysing transcripts")
+
+    #with st.spinner("Loading..."):
+        #time.sleep(5)  # Sleep for 5 seconds as an example
+    #st.success("Transcript analysis complete!")
 
 def add_question_form():
     if 'questions' not in st.session_state:
@@ -1392,4 +1398,7 @@ def interview_analyser():
 
     # Step 3: Analyse Transcripts
     if st.session_state.finished_adding_questions:
-        analyse_transcripts()
+        questions = st.session_state.questions
+        transcripts = st.session_state.transcripts
+
+        analyse_transcripts(questions, transcripts)
