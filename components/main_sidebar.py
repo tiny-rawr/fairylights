@@ -4,11 +4,6 @@ from projects._001_thought_checker.index import thought_checker
 from projects._002_interview_analyser.index import interview_analyser
 from projects._003_ask_your_spreadsheets.index import ask_your_spreadsheets
 import re
-from mixpanel import Mixpanel
-
-mixpanel_token = st.secrets["mixpanel"]["token"]
-mp = Mixpanel(mixpanel_token)
-
 
 def is_valid_api_key(api_key):
     if api_key.startswith("sk-") and len(api_key) == 51:
@@ -111,13 +106,6 @@ def sidebar():
 
     # Radio button for selecting a project
     selected_project = st.sidebar.radio("Try a project", project_names, index=default_index)
-
-    # Check if the selection has changed
-    if 'selected_project' not in st.session_state or st.session_state['selected_project'] != selected_project:
-        mp.track(st.session_state['session_id'], 'Project Selected', {
-            'project_name': selected_project
-        })
-        st.session_state['selected_project'] = selected_project
 
     # Set the project query parameter in the URL when a project is selected
     st.experimental_set_query_params(project=filtered_projects[selected_project]["slug"])
