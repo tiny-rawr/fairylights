@@ -35,7 +35,7 @@ def pull_quotes_from_transcript(questions, transcript):
     ]
 
     response = client.chat.completions.create(
-        model="gpt-3.5-Turbo",
+        model="gpt-3.5-turbo-1106",
         messages=conversation,
         tools=[{
             "type": "function",
@@ -67,7 +67,7 @@ def identify_cognitive_distortions(journal_entry):
         {"role": "user", "content": journal_entry},
     ]
     response = client.chat.completions.create(
-        model="gpt-3.5-Turbo",
+        model="gpt-3.5-turbo-1106",
         messages=conversation,
         tools=[{
             "type": "function",
@@ -120,7 +120,7 @@ def categorise_cognitive_distortions(quotes):
             {"role": "user", "content": str(quotes)},
         ]
         response = client.chat.completions.create(
-            model="gpt-3.5-Turbo",
+            model="gpt-3.5-turbo-1106",
             messages=conversation,
             tools=[{
                 "type": "function",
