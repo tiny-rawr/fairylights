@@ -1290,10 +1290,17 @@ def finish_adding_questions():
 
 def analyse_transcripts(questions, transcripts):
     progress = st.empty()
+    analysed_transcripts = []  # Use a different variable name to avoid conflict
     for index, transcript in enumerate(transcripts, start=1):
+        transcript_name = f"Transcript {index}"
         progress.info(f"Analysing {index}/{len(transcripts)} transcripts")
-        transcript_quotes = pull_quotes_from_transcript(questions, transcript)
-        st.write(f"{transcript_quotes}")
+        analysed_transcript = pull_quotes_from_transcript(questions, transcript)  # Assuming pull_quotes_from_transcript is defined
+        analysed_transcript['name'] = transcript_name
+        analysed_transcripts.append(analysed_transcript)
+
+    # Display each analysed transcript separately
+    for analysed_transcript in analysed_transcripts:
+        st.write(analysed_transcript)
 
     progress.success("Finished analysing transcripts")
 
