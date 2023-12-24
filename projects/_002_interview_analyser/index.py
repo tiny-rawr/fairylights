@@ -143,6 +143,7 @@ def interview_analyser():
         "Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
 
     if not st.session_state.get('finished_uploading', False):
+        st.warning("👷‍Use-case in progress!")
         with st.expander("✨️  See Project Details"):
             st.markdown(
                 "- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
