@@ -1,5 +1,25 @@
 import streamlit as st
 from gpt_api_calls import pull_quotes_from_transcript
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+import tiktoken
+
+def count_tokens(text):
+  tokenizer = tiktoken.get_encoding('cl100k_base')
+  tokens = tokenizer.encode(
+    text,
+    disallowed_special=()
+  )
+  return len(tokens)
+
+def chunk_text(text):
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=10000,
+        chunk_overlap=100,
+        length_function=count_tokens,
+        separators=['\n\n', '\n', ' ', '']
+    )
+
+    return text_splitter.split_text(text)
 
 def display_uploaded_transcripts():
     if st.session_state.get('transcripts'):
@@ -52,18 +72,28 @@ def analyse_transcripts(questions, transcripts):
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = transcript['name']
         transcript_source = transcript['source']
-        progress.info(f"Analysing transcript {index}/{len(transcripts)}: {transcript_name}")
-        analysed_transcript = pull_quotes_from_transcript(questions, transcript['transcript'])
+        transcript_text = transcript['transcript']
 
-        for question, quotes in analysed_transcript['interview'].items():
-            formatted_question = f"{question.replace('_', ' ').capitalize()}?"
-            if formatted_question not in question_quotes_mapping:
-                question_quotes_mapping[formatted_question] = []
+        progress.info(f"Analyzing transcript {index}/{len(transcripts)}: {transcript_name}")
 
-            for quote in quotes:
-                # Format the source as a hyperlink
-                formatted_source = f"[{transcript_name}]({transcript_source})"
-                question_quotes_mapping[formatted_question].append((quote, formatted_source))
+        transcript_chunks = chunk_text(transcript_text)  # Split the transcript into smaller chunks
+        total_chunks = len(transcript_chunks)
+
+        for chunk_index, chunk in enumerate(transcript_chunks, start=1):
+            analysed_transcript = pull_quotes_from_transcript(questions, chunk)
+
+            for question, quotes in analysed_transcript['interview'].items():
+                formatted_question = f"{question.replace('_', ' ').capitalize()}?"
+                if formatted_question not in question_quotes_mapping:
+                    question_quotes_mapping[formatted_question] = []
+
+                for quote in quotes:
+                    # Format the source as a hyperlink
+                    formatted_source = f"[{transcript_name}]({transcript_source})"
+                    question_quotes_mapping[formatted_question].append((quote, formatted_source))
+
+            # Display the progress
+            progress.info(f"Analyzing chunk {chunk_index}/{total_chunks} from transcript {index}/{len(transcripts)}: {transcript_name}")
 
     display_uploaded_transcripts()
 
@@ -87,15 +117,13 @@ def add_question_form():
         st.markdown("#### Step 2/3: Ask questions")
         question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
         submit_button = st.form_submit_button("Add question")
-        if st.session_state.questions:
-            display_questions()
 
         if submit_button and question_text:
             if question_text not in st.session_state.questions:
                 st.session_state.questions.append(question_text)
-                display_questions()
             else:
                 st.warning("You've already added this question")
+            display_questions()
 
     if st.session_state.questions and not st.session_state.finished_adding_questions:
         api_key = st.session_state.get('api_key', '')
