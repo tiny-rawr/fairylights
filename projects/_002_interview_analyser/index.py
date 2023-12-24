@@ -51,6 +51,7 @@ def analyse_transcripts(questions, transcripts):
 
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = transcript['name']
+        transcript_source = transcript['source']
         progress.info(f"Analysing transcript {index}/{len(transcripts)}: {transcript_name}")
         analysed_transcript = pull_quotes_from_transcript(questions, transcript['transcript'])
 
@@ -60,14 +61,16 @@ def analyse_transcripts(questions, transcripts):
                 question_quotes_mapping[formatted_question] = []
 
             for quote in quotes:
-                question_quotes_mapping[formatted_question].append((quote, transcript_name))
+                # Format the source as a hyperlink
+                formatted_source = f"[{transcript_name}]({transcript_source})"
+                question_quotes_mapping[formatted_question].append((quote, formatted_source))
 
     display_uploaded_transcripts()
 
     for question, quotes_and_sources in question_quotes_mapping.items():
         st.subheader(f"{question}")
         for quote, source in quotes_and_sources:
-            st.write(f"- \"{quote}\" *(source: {source})*")
+            st.markdown(f"- \"{quote}\" *(source: {source})*")
 
     progress.success("Finished analysing transcripts")
 
