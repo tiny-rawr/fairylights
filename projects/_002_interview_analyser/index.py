@@ -1280,6 +1280,24 @@ Interviewer: Yeah. Was that in your view, was that representative of the Army or
 Dugan: Yeah. Yeah, it was on target.
 """
 
+def display_uploaded_transcripts():
+    # Display transcripts if available
+    if st.session_state.transcripts:
+        with st.expander("👀 See uploaded transcripts"):
+            transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
+            selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
+
+            selected_index = transcript_labels.index(selected_transcript_index)
+            st.markdown(f"#### Transcript {selected_index + 1}")
+            st.markdown(
+                f"""
+                            <div style="overflow-y: scroll; height: 300px;">
+                                {st.session_state.transcripts[selected_index]}
+                            </div>
+                            """,
+                unsafe_allow_html=True
+            )
+
 def finish_uploading():
     st.session_state.render_transcript_form = False
     st.session_state.finished_uploading = True
@@ -1288,19 +1306,30 @@ def finish_adding_questions():
     st.session_state.render_questions_form = False
     st.session_state.finished_adding_questions = True
 
+
 def analyse_transcripts(questions, transcripts):
     progress = st.empty()
-    analysed_transcripts = []  # Use a different variable name to avoid conflict
+    question_quotes_mapping = {}  # Dictionary to store quotes grouped by questions
+
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = f"Transcript {index}"
         progress.info(f"Analysing {index}/{len(transcripts)} transcripts")
         analysed_transcript = pull_quotes_from_transcript(questions, transcript)  # Assuming pull_quotes_from_transcript is defined
-        analysed_transcript['name'] = transcript_name
-        analysed_transcripts.append(analysed_transcript)
 
-    # Display each analysed transcript separately
-    for analysed_transcript in analysed_transcripts:
-        st.write(analysed_transcript)
+        for question, quotes in analysed_transcript['interview'].items():
+            formatted_question = f"{question.replace('_', ' ').capitalize()}?"
+            if formatted_question not in question_quotes_mapping:
+                question_quotes_mapping[formatted_question] = []
+
+            for quote in quotes:
+                question_quotes_mapping[formatted_question].append((quote, transcript_name))
+
+    display_uploaded_transcripts()
+    # Display quotes grouped by questions
+    for question, quotes_and_sources in question_quotes_mapping.items():
+        st.subheader(f"{question}")
+        for quote, source in quotes_and_sources:
+            st.write(f"- \"{quote}\" *(source: {source})*")
 
     progress.success("Finished analysing transcripts")
 
@@ -1386,22 +1415,7 @@ def interview_analyser():
 
     # Step 2: Add Questions Form
     if st.session_state.finished_uploading and not st.session_state.finished_adding_questions:
-        # Display transcripts if available
-        if st.session_state.transcripts:
-            with st.expander("👀 See uploaded transcripts"):
-                transcript_labels = [f"Transcript {i + 1}" for i in range(len(st.session_state.transcripts))]
-                selected_transcript_index = st.selectbox("Select Transcript", transcript_labels)
-
-                selected_index = transcript_labels.index(selected_transcript_index)
-                st.markdown(f"#### Transcript {selected_index + 1}")
-                st.markdown(
-                    f"""
-                        <div style="overflow-y: scroll; height: 300px;">
-                            {st.session_state.transcripts[selected_index]}
-                        </div>
-                        """,
-                    unsafe_allow_html=True
-                )
+        display_uploaded_transcripts()
         add_question_form()
 
     # Step 3: Analyse Transcripts
