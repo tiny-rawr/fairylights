@@ -16,7 +16,7 @@ def display_uploaded_transcripts():
                 st.markdown(f"<div style='overflow-y: scroll; height: 300px;'>{selected_transcript['transcript']}</div>", unsafe_allow_html=True)
 
 def add_transcript_form():
-    from projects._002_interview_analyser.interviews.veteran_interview_donald_dugan import transcript
+    from projects._002_interview_analyser.veteran_interview_donald_dugan import transcript
 
     with st.form("transcript_form"):
         st.markdown("#### Step 1/3: Upload your transcript/s")
