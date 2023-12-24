@@ -1369,7 +1369,7 @@ def add_question_form():
             st.button("Finished adding questions", on_click=finish_adding_questions)
 
 def interview_analyser():
-    st.title('🪖 Interview Analyser')
+    st.title('🎙Transcript Analyser')
     st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
     if not st.session_state.get('finished_uploading', False):
         with st.expander("✨️  See Project Details"):
