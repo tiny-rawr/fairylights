@@ -152,7 +152,7 @@ def display_project_details():
 
 def interview_analyser():
     st.title('🎙Transcript Analyser')
-    st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
+    st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. See project details for cool ways of using this.")
 
     if not st.session_state.get('finished_uploading_transcripts', False):
         st.warning("👷‍Use-case in progress!")
