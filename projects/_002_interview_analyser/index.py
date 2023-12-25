@@ -72,6 +72,7 @@ def add_question_form():
 
         if submit_button and question_text:
             add_question_to_session(question_text)
+            display_questions()
 
     if st.session_state.questions and not st.session_state.finished_adding_questions:
         api_key = st.session_state.get('api_key', '')
@@ -135,12 +136,17 @@ def analyse_transcripts(questions, transcripts):
     progress.success("Finished analysing transcripts")
 
 def display_project_details():
-    with st.expander("✨️  See Project Details"):
-        st.markdown("- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
-        st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
-        st.markdown("- 💖 **Pain Point Addressed:** Instead of spending hours reading through user interview transcripts, pulling out quotes that are relevant to the questions/topics you care about, you can instead invest your energy in actioning the insights gained.")
-        st.markdown("- ⚠️ **Limitations:** You need to do a separate API call per question to get a more comprehensive list of quotes. You can ask multiple questions in a single call, but the more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
-        st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
+    with st.expander("✨ See project details"):
+        st.subheader("Real-life Impact")
+        st.warning("⏰ **Saved time:** Saved founder 30 hours of user interview analysis so they were able to act on insights the same day.")
+        st.subheader("Ways to use this")
+        st.markdown("- **✅ Actionable User interview insights**: Upload transcripts of user interviews, and pull out quotes to help you decide what to change/improve on. E.g. What did they like? Dislike? Common improvement suggestions. I built this little solution for this use-case and saved a founder 30+ hours of analysing their interviews when they already had a ton of fires to put out and just wanted to get started on making changes.")
+        st.markdown("- **🪖 World-building**: Let's say you want to build a world for a novel you're writing. You can upload transcripts with that group (e.g. war veterans), and pull out quotes to help you flesh out that world, e.g. Slang, weather patterns, routines, clothing, technology, vehicles, weaponry, meals etc.")
+        st.markdown("- **🎙️ Pitch video tips:** I uploaded transcripts from many pitch nights where founders pitched their startup ideas to a panel of investors at Fishburners, then extracted all the questions that founders were asked by the panel of investors, and also go to market strategies etc.")
+        st.subheader("Limitations")
+        st.error("⚠️ **Non-exhaustive quotes**: The more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
+        st.subheader("Extra")
+        st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
 
 def interview_analyser():
     st.title('🎙Transcript Analyser')
