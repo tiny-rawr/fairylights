@@ -86,7 +86,7 @@ def highlight_text(journal_entry, distortions):
 def display_project_details():
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
-        st.write("This was something I built for myself. A mental health exercise that really helps me, is re-reading past journal entries for days where I feel lower, identifying unhelpful thinking patterns based on a set list of cognitive distortions, then reframing the ones that are especially unhelpful and recurring. However, I rarely did this because re-reading past entries and identifying distortions was suuper draining, so I needed something to outsource that step for me so I could focus on reframing.")
+        st.write("This was something I built for myself. A mental health exercise that really helps me is reframing unhelpful thinking patterns identified in past journal entries, especially from lower mental health days. However, I rarely did this because re-reading past entries and identifying distortions was suuper draining. This solution outsourced that step for me so I could focus on reframing.")
         st.subheader("Real-life Impact")
         st.warning("🥰 **20 vs 1 exercise completions in a month:** I went from completing this super helpful reframing exercise once in a month to 20 times, because the emotionally exhausting step has been removed. I'm very grateful for this use-case.")
         st.subheader("Ways to use this")
