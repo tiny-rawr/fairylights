@@ -1,5 +1,5 @@
 import streamlit as st
-from gpt_api_calls import pull_quotes_from_transcript
+from projects._002_interview_analyser.gpt_api_calls import pull_quotes_from_transcript
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import tiktoken
 
