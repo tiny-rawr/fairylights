@@ -146,7 +146,7 @@ def display_project_details():
         st.markdown("- **🪖 World-building**: Let's say you want to build a world for a novel you're writing. You can upload transcripts with that group (e.g. war veterans), and pull out quotes to help you flesh out that world, e.g. Slang, weather patterns, routines, clothing, technology, vehicles, weaponry, meals etc.")
         st.markdown("- **🎙️ Pitch video tips:** I uploaded transcripts from many pitch nights where founders pitched their startup ideas to a panel of investors at Fishburners, then extracted all the questions that founders were asked by the panel of investors, and also go to market strategies etc.")
         st.subheader("Limitations")
-        st.error("⚠️ **Non-exhaustive quotes**: The more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
+        st.error("⚠️ **Non-exhaustive quotes**: The more you ask the less quotes you get per question because of the limited context window (amount of text that can be processed per single call).")
         st.subheader("Extra")
         st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
 
