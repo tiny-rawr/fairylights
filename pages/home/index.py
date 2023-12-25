@@ -9,8 +9,6 @@ def home():
 
             st.markdown("**Nov 2023**")
             st.markdown("- 🚀 One of my proprietry GenAI use-cases led to a 350% in organic traffic and 300% increase in patient bookings for a health startup in a single month.")
-            st.write("")
-            st.image("images/bookings-made-from-generated-profiles.png")
 
             st.markdown("**Oct 2023**")
             st.markdown("- 👷‍ Became a community advisor at [AI Builders Club](https://www.linkedin.com/company/the-builders-club-ai/) which does weekly hackathons and opens up a world of opportunities for fellow builders and founders (joined at 250 members on the Slack channel).")
