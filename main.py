@@ -1,4 +1,4 @@
-from components.main_sidebar import sidebar
+from shared.main_sidebar import sidebar
 import uuid
 import streamlit as st
 
