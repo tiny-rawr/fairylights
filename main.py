@@ -1,4 +1,4 @@
-from shared.main_sidebar import sidebar
+from sitewide.main_sidebar import sidebar
 import uuid
 import streamlit as st
 
