@@ -1,6 +1,6 @@
 import streamlit as st
 from projects._001_thought_checker.gpt_api_calls import identify_cognitive_distortions, categorise_cognitive_distortions
-from projects._001_thought_checker.event_tracking import track_page_view, track_text_input, track_journal_entry_input, track_form_submission
+from projects._001_thought_checker.event_tracking import track_text_input, track_journal_entry_input, track_form_submission
 import uuid
 
 def initialize_session():
@@ -85,7 +85,6 @@ def highlight_text(journal_entry, distortions):
 
 def thought_checker():
     initialize_session()
-    track_page_view()
 
     st.title('🧠 Thought Checker')
     st.markdown("Enter a journal entry and this GenAI program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")

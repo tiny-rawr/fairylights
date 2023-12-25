@@ -1,11 +1,6 @@
 import streamlit as st
 from mixpanel import Mixpanel
 
-def track_page_view():
-    mp = Mixpanel(st.secrets["mixpanel"]["token"])
-    mp.track(st.session_state['session_id'], 'Page Viewed', {'page_name': 'Thought Checker'})
-
-
 def track_text_input():
     if 'text_entered' not in st.session_state:
         mp = Mixpanel(st.secrets["mixpanel"]["token"])
