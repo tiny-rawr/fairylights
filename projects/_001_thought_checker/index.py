@@ -83,18 +83,28 @@ def highlight_text(journal_entry, distortions):
 
     return journal_entry
 
+def display_project_details():
+    with st.expander("✨ See project details"):
+        st.subheader("Why I built this")
+        st.write("This was something I built for myself. A mental health exercise that really helps me, is re-reading past journal entries for days where I feel lower, identifying unhelpful thinking patterns based on a set list of cognitive distortions, then reframing the ones that are especially unhelpful and recurring. However, I rarely did this because re-reading past entries and identifying distortions was suuper draining, so I needed something to outsource that step for me so I could focus on reframing.")
+        st.subheader("Real-life Impact")
+        st.warning("🥰 **20 vs 1 exercise completions in a month:** I went from completing this super helpful reframing exercise once in a month to 20 times, because the emotionally exhausting step has been removed. I'm very grateful for this use-case.")
+        st.subheader("Ways to use this")
+        st.markdown("- **💖 Reframing thoughts:** Set a timer for 5 minutes and write a stream of conciousness about your day, with zero filter. Click submit and browse through the unhelpful thinking patterns that have been highlighted if any. Pick the one that is causing you the most pain right now, and focus on reframing just that. Reframing is where you come up with postive but truthful statements to help you nudge your mindset in a more empowering direction for a specific thought.")
+        st.markdown("- **🎙️ News bias:** You can paste in a news article or transcript and spot unhelpful thinking patterns that can lead to strong negative feelings.")
+        st.subheader("Limitations")
+        st.markdown("- ⚠️ **75% accuracy** Sometimes labels factual or realistic statements as distortions, which can be extra frustrating for painful events, e.g. 'I will never see my cat again' can be flagged as 'fortune telling' when it's true (pet died). 75% accuracy is still better than not having it in my opinion.")
+        st.markdown("- ⚠️ **Unique patterns**: Different parts of the exact same journal entry can be highlighted across different submissions. For the most part, the same ones are highlighted but not exact. Same as doing it manually as a human.")
+        st.subheader("Extra")
+        st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/analyse-a-journal-entry-for-unhelpful).")
+
 
 def thought_checker():
     initialize_session()
 
     st.title('🧠 Thought Checker')
     st.markdown("Enter a journal entry and this GenAI program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")
-    with st.expander("✨️  See Project Details"):
-        st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
-        st.markdown("- 💖 **Pain Point Addressed:** Reading a journal entry multiple times trying to spot cognitive distortions is draining, and can reduce the likelihood of completing or attempting the exercise on low-energy/mood days. This program outsources the identification step, so all energy can go to the higher-impact reframing step.")
-        st.markdown("- ⚠️ **Limitations:** 75% accuracy (still more helpful than not having the program at all). Sometimes labels factual or realistic statements as distortions, e.g. 'I will never see my cat again' can be flagged as 'fortune telling' when it's true (pet died).")
-        st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/analyse-a-journal-entry-for-unhelpful).")
-
+    display_project_details()
     info_placeholder = st.empty()
     info_placeholder.warning("⚠️ This app is not a replacement for professional medical or mental health advice. For personalized guidance, please consult a qualified healthcare or mental health professional 💖")
 
