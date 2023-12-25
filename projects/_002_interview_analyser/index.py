@@ -1,7 +1,16 @@
 import streamlit as st
 from projects._002_interview_analyser.gpt_api_calls import pull_quotes_from_transcript
-from projects.shared.genai_utils import count_tokens, chunk_text
+from projects.shared.genai_utils import chunk_text
 
+def initialize_session_state():
+    if 'render_transcript_form' not in st.session_state:
+        st.session_state.render_transcript_form = True
+    if 'finished_uploading' not in st.session_state:
+        st.session_state.finished_uploading_transcripts = False
+    if 'finished_adding_questions' not in st.session_state:
+        st.session_state.finished_adding_questions = False
+    if 'transcripts' not in st.session_state:
+        st.session_state.transcripts = []
 
 def add_transcript_to_session(transcript_name, transcript_source, transcript_text):
     if any(transcript['name'] == transcript_name for transcript in st.session_state.transcripts):
@@ -13,7 +22,6 @@ def add_transcript_to_session(transcript_name, transcript_source, transcript_tex
             'transcript': transcript_text
         }
         st.session_state.transcripts.append(transcript)
-
 
 def add_question_to_session(question_text):
     if question_text not in st.session_state.questions:
@@ -39,6 +47,20 @@ def display_questions():
     for question in st.session_state.questions:
         st.markdown(f"- {question}")
 
+def add_transcript_form():
+    from projects._002_interview_analyser.demo_data.veteran_interview_donald_dugan import transcript
+
+    with st.form("transcript_form"):
+        st.markdown("#### Step 1/3: Upload your transcript/s")
+        transcript_name = st.text_input("Transcript Name:", value=transcript['name'])
+        transcript_source = st.text_input("Transcript Source:", value=transcript['source'])
+        transcript_text = st.text_area("Paste Transcript Text (5000 characters max):", height=200, value=transcript['transcript'])
+
+        submit_button = st.form_submit_button("Add transcript")
+
+        if submit_button:
+            add_transcript_to_session(transcript_name, transcript_source, transcript_text)
+
 def add_question_form():
     if 'questions' not in st.session_state:
         st.session_state.questions = []
@@ -61,23 +83,9 @@ def add_question_form():
         else:
             st.button("Finished adding questions", on_click=finish_adding_questions)
 
-def add_transcript_form():
-    from projects._002_interview_analyser.demo_data.veteran_interview_donald_dugan import transcript
-
-    with st.form("transcript_form"):
-        st.markdown("#### Step 1/3: Upload your transcript/s")
-        transcript_name = st.text_input("Transcript Name:", value=transcript['name'])
-        transcript_source = st.text_input("Transcript Source:", value=transcript['source'])
-        transcript_text = st.text_area("Paste Transcript Text (5000 characters max):", height=200, value=transcript['transcript'])
-
-        submit_button = st.form_submit_button("Add transcript")
-
-        if submit_button:
-            add_transcript_to_session(transcript_name, transcript_source, transcript_text)
-
-def finish_uploading():
+def finish_uploading_transcripts():
     st.session_state.render_transcript_form = False
-    st.session_state.finished_uploading = True
+    st.session_state.finished_uploading_transcripts = True
 
 def finish_adding_questions():
     st.session_state.render_questions_form = False
@@ -117,9 +125,6 @@ def analyse_transcripts(questions, transcripts):
 
         question_quotes_mapping.update(analyse_transcript(questions, transcript))
 
-        # Display the progress
-        progress.info(f"Analyzing transcript {index}/{len(transcripts)}: {transcript_name}")
-
     display_uploaded_transcripts()
 
     for question, quotes_and_sources in question_quotes_mapping.items():
@@ -129,43 +134,31 @@ def analyse_transcripts(questions, transcripts):
 
     progress.success("Finished analysing transcripts")
 
+def display_project_details():
+    with st.expander("✨️  See Project Details"):
+        st.markdown("- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
+        st.markdown("- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
+        st.markdown("- 💖 **Pain Point Addressed:** Instead of spending hours reading through user interview transcripts, pulling out quotes that are relevant to the questions/topics you care about, you can instead invest your energy in actioning the insights gained.")
+        st.markdown("- ⚠️ **Limitations:** You need to do a separate API call per question to get a more comprehensive list of quotes. You can ask multiple questions in a single call, but the more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
+        st.markdown("- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
+
 def interview_analyser():
     st.title('🎙Transcript Analyser')
-    st.markdown(
-        "Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
+    st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. Great for founders who want to learn from user interviews but don't have the time to comb through them to extract insights for specific questions/topics.")
 
-    if not st.session_state.get('finished_uploading', False):
+    if not st.session_state.get('finished_uploading_transcripts', False):
         st.warning("👷‍Use-case in progress!")
-        with st.expander("✨️  See Project Details"):
-            st.markdown(
-                "- ⏰ **Impact:** Saved a founder 30 hours analysing past user interview transcripts, so he was able to action insights same day.")
-            st.markdown(
-                "- 🛠️ **Tools:** OpenAI - gpt-3.5-turbo [chat completion model](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) with function calling (see [code snippet](https://gist.github.com/tiny-rawr/e411d3ff31af0cf5a6a72b640502ea3f)).")
-            st.markdown(
-                "- 💖 **Pain Point Addressed:** Instead of spending hours reading through user interview transcripts, pulling out quotes that are relevant to the questions/topics you care about, you can instead invest your energy in actioning the insights gained.")
-            st.markdown(
-                "- ⚠️ **Limitations:** You need to do a separate API call per question to get a more comprehensive list of quotes. You can ask multiple questions in a single call, but the more you ask the less quotes you get per question because of the limited context window (amount of text that can be retrieved per single call).")
-            st.markdown(
-                "- 💌 Read the full [deep dive build process here](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
-
-        if 'render_transcript_form' not in st.session_state:
-            st.session_state.render_transcript_form = True
-        if 'finished_uploading' not in st.session_state:
-            st.session_state.finished_uploading = False
-        if 'finished_adding_questions' not in st.session_state:
-            st.session_state.finished_adding_questions = False
-
-    if 'transcripts' not in st.session_state:
-        st.session_state.transcripts = []
+        display_project_details()
+        initialize_session_state()
 
     if st.session_state.render_transcript_form:
         add_transcript_form()
 
-    if st.session_state.transcripts and not st.session_state.finished_uploading:
+    if st.session_state.transcripts and not st.session_state.finished_uploading_transcripts:
         display_uploaded_transcripts()
-        st.button("Finished adding transcripts", on_click=finish_uploading)
+        st.button("Finished adding transcripts", on_click=finish_uploading_transcripts)
 
-    if st.session_state.finished_uploading and not st.session_state.finished_adding_questions:
+    if st.session_state.finished_uploading_transcripts and not st.session_state.finished_adding_questions:
         display_uploaded_transcripts()
         add_question_form()
 
