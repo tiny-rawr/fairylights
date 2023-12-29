@@ -92,8 +92,13 @@ def finish_adding_questions():
     st.session_state.render_questions_form = False
     st.session_state.finished_adding_questions = True
 
+def display_extracted_quotes(quote_obj):
+    for question, quotes in quote_obj['interview'].items():
+        print(f"### {question}")
+        for quote in quotes:
+            print(f"- {quote}")
+
 def analyse_transcript(questions, transcript):
-    question_quotes_mapping = {}
     transcript_name = transcript['name']
     transcript_source = transcript['source']
     transcript_text = transcript['transcript']
@@ -104,16 +109,10 @@ def analyse_transcript(questions, transcript):
         analysed_transcript = pull_quotes_from_transcript(questions, chunk)
 
         for question, quotes in analysed_transcript['interview'].items():
-            formatted_question = f"{question.replace('_', ' ').capitalize()}?"
-            if formatted_question not in question_quotes_mapping:
-                question_quotes_mapping[formatted_question] = []
-
+            st.markdown(f"#### {question}")
             for quote in quotes:
-                # Format the source as a hyperlink
-                formatted_source = f"[{transcript_name}]({transcript_source})"
-                question_quotes_mapping[formatted_question].append((quote, formatted_source))
-
-    return question_quotes_mapping
+                st.markdown(f"- {quote} ([source: {transcript_name}]({transcript_source}))")
+    return
 
 def analyse_transcripts(questions, transcripts):
     progress = st.empty()
