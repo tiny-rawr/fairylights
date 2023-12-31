@@ -8,17 +8,17 @@ from mixpanel import Mixpanel
 
 def extract_quotes(text, topic):
     #api_key = st.session_state.api_key
-    api_key = "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"
+    api_key = "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"
     client = OpenAI(api_key=api_key)
 
     conversation = [
-        {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
+        {"role": "system", "content": "You are a helpful assistant designed to extract a single relevant quote output as JSON."},
         {"role": "user", "content": f"""
-Using the text provided below, extract a maximum of 2 quotes that directly address the topic: [User-Provided Topic]. 
+Using the text provided below, extract one quote that directly address the topic: [User-Provided Topic]. 
 
-1. Identify sections of the text relevant to the topic.
-2. Extract quotes from these sections that are directly relevant to the topic.
-3. Present these quotes in a list format.
+1. Extract the most relevant quote from the text that is directly relevant to the topic. If there isn't a relevant quote, return nothing.
+2. Make sure that the quote makes sense in light of the topic. If it doesn't, find another.
+3. Present this quote as a string.
 
 Text for Quote Extraction:
 {str(text)}
@@ -26,11 +26,7 @@ Text for Quote Extraction:
 Topic:
 "{topic}"
 
-Ensure that the quotes are contextually accurate and maintain the original meaning from the text.
-
-Do not include any quotes from the interviewer. If there are no relevant quotes, return nothing.
-
-Make sure every quote makes sense in light of the topic.
+Ensure that the quote is contextually accurate and maintains the original meaning from the text.
 
 the JSON output should always have the key "{topic}"
         """},

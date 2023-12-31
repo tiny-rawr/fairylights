@@ -105,7 +105,6 @@ def analyse_transcripts(questions, transcripts):
 
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = transcript['name']
-        transcript_source = transcript['source']
         transcript_text = transcript['transcript']
         chunks = chunk_text(transcript_text)  # Assuming you have a function called chunk_text
 
@@ -113,18 +112,18 @@ def analyse_transcripts(questions, transcripts):
             progress.info(f"Analyzing chunk {chunk_index}/{len(chunks)} of transcript {index}/{len(transcripts)}: {transcript_name}")
 
             for current_question in questions:
-                quotes_json_str = extract_quotes(chunk, current_question)
-                quotes_dict = json.loads(quotes_json_str)
-                for question, quotes in quotes_dict.items():
-                    if question not in question_quotes_mapping:
-                        question_quotes_mapping[question] = set()
-                    question_quotes_mapping[question].update(quotes)
+                quotes_dict = json.loads(extract_quotes(chunk, current_question))  # Convert the JSON string to a dictionary
+                if current_question not in question_quotes_mapping:
+                    question_quotes_mapping[current_question] = []
+                if quotes_dict:
+                    question_quotes_mapping[current_question].append((quotes_dict[current_question], transcript_name))
 
     display_uploaded_transcripts()
 
-    for question, quotes in question_quotes_mapping.items():
+    for question, quotes_and_sources in question_quotes_mapping.items():
         st.subheader(question.strip())
-        for quote in quotes:
+        for quote, transcript_name in quotes_and_sources:
+            transcript_source = next((t['source'] for t in transcripts if t['name'] == transcript_name), "")
             st.markdown(f"- {quote} (*source: [{transcript_name}]({transcript_source})*)")
 
     progress.success("Finished analysing transcripts")
