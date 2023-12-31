@@ -2,6 +2,8 @@ import streamlit as st
 from projects._002_interview_analyser.gpt_api_calls import extract_quotes
 from projects.shared.genai_utils import chunk_text
 import json
+from mixpanel import Mixpanel
+mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
 def initialize_session_state():
     if 'render_transcript_form' not in st.session_state:
@@ -85,11 +87,34 @@ def add_question_form():
         else:
             st.button("Finished adding questions", on_click=finish_adding_questions)
 
+
 def finish_uploading_transcripts():
+    num_transcripts_added = len(st.session_state.transcripts)
+    used_demo_transcript = any(transcript['transcript'] == transcript for transcript in st.session_state.transcripts)
+
+    mp.track(st.session_state['session_id'], 'Finished Adding Transcripts', {
+        'Number of Transcripts Added': num_transcripts_added,
+        'Used Demo Transcript': used_demo_transcript,
+        'Added Own Transcripts': num_transcripts_added - int(used_demo_transcript),
+        'Used Own Transcripts Entirely': num_transcripts_added > 0 and not used_demo_transcript,
+        'Page Name': 'Interview Analyser'
+    })
+
     st.session_state.render_transcript_form = False
     st.session_state.finished_uploading_transcripts = True
 
 def finish_adding_questions():
+    num_questions_added = len(st.session_state.questions)
+    used_demo_question = any(question == question for question in st.session_state.questions)
+
+    mp.track(st.session_state['session_id'], 'Finished adding Questions', {
+        'Number of Questions Added': num_questions_added,
+        'Used Demo Question': used_demo_question,
+        'Added Own Questions': num_questions_added - int(used_demo_question),
+        'Used Own Questions Entirely': num_questions_added > 0 and not used_demo_question,
+        'Page Name': 'Interview Analyser'
+    })
+
     st.session_state.render_questions_form = False
     st.session_state.finished_adding_questions = True
 

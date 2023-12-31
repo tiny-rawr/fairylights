@@ -3,7 +3,7 @@ import streamlit as st
 from mixpanel import Mixpanel
 #from demo_data.veteran_interview_donald_dugan import transcript
 
-#mp = Mixpanel(st.secrets["mixpanel"]["token"])
+mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
 
 def extract_quotes(text, topic):
@@ -36,6 +36,15 @@ the JSON output should always have the key "{topic}"
         messages=conversation,
         response_format={"type": "json_object"}
     )
+
+    mp.track(st.session_state['session_id'], "OpenAI API Call", {
+        "event": "OpenAI API Call",
+        "Model": response.model,
+        "Project": "Interview Analyser",
+        "Method": "extract_quotes",
+        "Input tokens": response.usage.prompt_tokens,
+        "Output tokens": response.usage.completion_tokens
+    })
 
     return response.choices[0].message.content
 
