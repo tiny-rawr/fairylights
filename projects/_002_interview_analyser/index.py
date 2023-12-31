@@ -52,7 +52,7 @@ def add_transcript_form():
     from projects._002_interview_analyser.demo_data.veteran_interview_donald_dugan import transcript
 
     with st.form("transcript_form"):
-        st.markdown("#### Step 1/3: Upload your transcript/s")
+        st.markdown("#### Step 1/2: Upload your transcript/s")
         transcript_name = st.text_input("Transcript Name:", value=transcript['name'])
         transcript_source = st.text_input("Transcript Source:", value=transcript['source'])
         transcript_text = st.text_area("Paste Transcript Text (5000 characters max):", height=200, value=transcript['transcript'])
@@ -67,7 +67,7 @@ def add_question_form():
         st.session_state.questions = []
 
     with st.form("question_form"):
-        st.markdown("#### Step 2/3: Ask questions")
+        st.markdown("#### Step 2/2: Ask questions")
         question_text = st.text_input("Enter a question or topic:", value="What motivated you to join the military?")
         submit_button = st.form_submit_button("Add question")
 
@@ -127,29 +127,6 @@ def analyse_transcripts(questions, transcripts):
     progress.success("Finished analysing transcripts")
 
 
-
-def analyse_transcript(questions, transcript):
-    transcript_name = transcript['name']
-    transcript_source = transcript['source']
-    transcript_text = transcript['transcript']
-
-    transcript_chunks = chunk_text(transcript_text)
-    question_quotes = {}
-
-    for chunk_index, chunk in enumerate(transcript_chunks, start=1):
-        analysed_transcript = pull_quotes_from_transcript(chunk, questions)
-
-        for question in questions:
-            quotes = analysed_transcript['interview'].get(question, [])
-            if quotes:
-                if question not in question_quotes:
-                    question_quotes[question] = []
-                formatted_quotes = [f"{quote} ([source: {transcript_name}]({transcript_source}))" for quote in quotes]
-                question_quotes[question].extend(formatted_quotes)
-
-    return question_quotes
-
-
 def display_project_details():
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
@@ -170,7 +147,6 @@ def interview_analyser():
     st.markdown("Upload interview transcripts, and this GenAI program will pull out direct quotes from the transcripts related to your custom questions. See project details for cool ways of using this.")
 
     if not st.session_state.get('finished_uploading_transcripts', False):
-        st.warning("👷‍Use-case in progress!")
         display_project_details()
         initialize_session_state()
 
