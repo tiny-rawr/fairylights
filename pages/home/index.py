@@ -31,3 +31,8 @@ def home():
     st.write("Enter a journal entry and this GenAI program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")
     st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=thought-checker)")
     st.image("images/featured/thought_checker.png", use_column_width=True)
+
+    st.subheader("Transcript Analyser")
+    st.write("Upload transcripts of user interviews, YouTube videos, podcasts etc and get back direct quotes that are related to specific questions or topics.")
+    st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=transcript-analyser)")
+    st.image("images/featured/transcript_analyser.png", use_column_width=True)
