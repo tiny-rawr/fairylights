@@ -55,7 +55,7 @@ def add_transcript_form():
         st.markdown("#### Step 1/2: Upload your transcripts")
         transcript_name = st.text_input("Transcript Name:", value=transcript['name'])
         transcript_source = st.text_input("Transcript Source:", value=transcript['source'])
-        transcript_text = st.text_area("Paste Transcript Text (5000 characters max):", height=200, value=transcript['transcript'])
+        transcript_text = st.text_area("Paste Transcript Text:", height=200, value=transcript['transcript'])
 
         submit_button = st.form_submit_button("Add transcript")
 
