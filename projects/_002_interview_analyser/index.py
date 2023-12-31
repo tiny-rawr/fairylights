@@ -105,6 +105,8 @@ def analyse_transcripts(questions, transcripts):
 
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = transcript['name']
+        transcript_source = transcript['source']
+
         progress.info(f"Analyzing transcript {index}/{len(transcripts)}: {transcript_name}")
 
         for current_question in questions:
@@ -120,7 +122,7 @@ def analyse_transcripts(questions, transcripts):
     for question, quotes in question_quotes_mapping.items():
         st.subheader(question.strip())
         for quote in quotes:
-            st.markdown(f"- {quote}")
+            st.markdown(f"- {quote} (source: [{transcript_name}]({transcript_source}))")
 
     progress.success("Finished analysing transcripts")
 
