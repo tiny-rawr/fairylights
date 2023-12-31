@@ -7,7 +7,8 @@ from mixpanel import Mixpanel
 
 
 def extract_quotes(text, topic):
-    api_key = st.session_state.api_key
+    #api_key = st.session_state.api_key
+    api_key = "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"
     client = OpenAI(api_key=api_key)
 
     conversation = [
