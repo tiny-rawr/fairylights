@@ -1,6 +1,7 @@
 import streamlit as st
-from projects._002_interview_analyser.gpt_api_calls import pull_quotes_from_transcript
+from projects._002_interview_analyser.gpt_api_calls import extract_quotes
 from projects.shared.genai_utils import chunk_text
+import json
 
 def initialize_session_state():
     if 'render_transcript_form' not in st.session_state:
@@ -93,26 +94,10 @@ def finish_adding_questions():
     st.session_state.finished_adding_questions = True
 
 def display_extracted_quotes(quote_obj):
-    for question, quotes in quote_obj['interview'].items():
+    for question, quotes in quote_obj.items():
         print(f"### {question}")
         for quote in quotes:
             print(f"- {quote}")
-
-def analyse_transcript(questions, transcript):
-    transcript_name = transcript['name']
-    transcript_source = transcript['source']
-    transcript_text = transcript['transcript']
-
-    transcript_chunks = chunk_text(transcript_text)
-
-    for chunk_index, chunk in enumerate(transcript_chunks, start=1):
-        analysed_transcript = pull_quotes_from_transcript(questions, chunk)
-
-        for question, quotes in analysed_transcript['interview'].items():
-            st.markdown(f"#### {question}")
-            for quote in quotes:
-                st.markdown(f"- {quote} ([source: {transcript_name}]({transcript_source}))")
-    return
 
 def analyse_transcripts(questions, transcripts):
     progress = st.empty()
@@ -120,19 +105,48 @@ def analyse_transcripts(questions, transcripts):
 
     for index, transcript in enumerate(transcripts, start=1):
         transcript_name = transcript['name']
-
         progress.info(f"Analyzing transcript {index}/{len(transcripts)}: {transcript_name}")
 
-        question_quotes_mapping.update(analyse_transcript(questions, transcript))
+        for current_question in questions:
+            quotes_json_str = extract_quotes(transcript['transcript'], current_question)
+            quotes_dict = json.loads(quotes_json_str)
+            for question, quotes in quotes_dict.items():
+                if question not in question_quotes_mapping:
+                    question_quotes_mapping[question] = set()
+                question_quotes_mapping[question].update(quotes)
 
     display_uploaded_transcripts()
 
-    for question, quotes_and_sources in question_quotes_mapping.items():
-        st.subheader(f"{question}")
-        for quote, source in quotes_and_sources:
-            st.markdown(f"- \"{quote}\" *(source: {source})*")
+    for question, quotes in question_quotes_mapping.items():
+        st.subheader(question.strip())
+        for quote in quotes:
+            st.markdown(f"- {quote}")
 
     progress.success("Finished analysing transcripts")
+
+
+
+def analyse_transcript(questions, transcript):
+    transcript_name = transcript['name']
+    transcript_source = transcript['source']
+    transcript_text = transcript['transcript']
+
+    transcript_chunks = chunk_text(transcript_text)
+    question_quotes = {}
+
+    for chunk_index, chunk in enumerate(transcript_chunks, start=1):
+        analysed_transcript = pull_quotes_from_transcript(chunk, questions)
+
+        for question in questions:
+            quotes = analysed_transcript['interview'].get(question, [])
+            if quotes:
+                if question not in question_quotes:
+                    question_quotes[question] = []
+                formatted_quotes = [f"{quote} ([source: {transcript_name}]({transcript_source}))" for quote in quotes]
+                question_quotes[question].extend(formatted_quotes)
+
+    return question_quotes
+
 
 def display_project_details():
     with st.expander("✨ See project details"):
