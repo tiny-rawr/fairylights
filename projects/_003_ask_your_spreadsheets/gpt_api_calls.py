@@ -39,7 +39,7 @@ def generate_sql_statement(user_question, table_schemas):
                 "type": "function",
                 "function": {
                     "name": "generate_sql_statement",
-                    "description": "Read the question, schema and first row of the table carefully, then generate the simplest SQL statement you can. When handling date values, use strftime, use the CAST functino to remove leading zeros. Specify source name for columns in any join queries. Statements should be written in this order: 'SELECT [Columns to Select] FROM [Source Table(s)] WHERE [Conditions if needed] GROUP BY [Columns for Grouping if needed] HAVING [Conditions for Grouping if needed] ORDER BY [Columns for Sorting].''",
+                    "description": "Read the question, schema and first row of the table carefully, then generate the simplest SQL statement you can. When handling date values, use strftime, use the CAST function to remove leading zeros and the DATE function to extract the date part from a datetime. Specify source name for columns in any join queries. Use the most appropriate columns for each query. Statements should be written in this order: 'SELECT [Columns to Select] FROM [Source Table(s)] WHERE [Conditions if needed] GROUP BY [Columns for Grouping if needed] HAVING [Conditions for Grouping if needed] ORDER BY [Columns for Sorting].''",
                     "parameters": {
                         "type": "object",
                         "properties": {
