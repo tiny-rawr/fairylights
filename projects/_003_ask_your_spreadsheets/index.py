@@ -33,6 +33,19 @@ def csv_file_viewer(dataframes):
         if selected_file:
             st.dataframe(dataframes[selected_file])
 
+@st.cache_resource
+def get_sql_connection():
+    return sqlite3.connect(':memory:')
+
+def drop_all_tables(conn):
+    """Drop all tables in the database."""
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
+    for table_name in tables:
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name[0]}")
+    conn.commit()
+
 def get_table_schemas_with_data(conn):
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -72,7 +85,8 @@ def step_1():
     uploaded_files = st.file_uploader("Upload CSV Files", type=["csv"], accept_multiple_files=True)
 
     if uploaded_files:
-        conn = sqlite3.connect(':memory:')
+        conn = get_sql_connection()
+        drop_all_tables(conn)
         dataframes = {}
 
         for file in uploaded_files:
@@ -91,7 +105,7 @@ def step_1():
 def step_2():
     st.title("Step 2/2: Ask a Question")
 
-    question = st.text_input("Question:", value="Show me all everything in [table name] table")
+    question = st.text_input("Question:", value="Show me everything in [table name] table")
     if st.button("Ask Question"):
         api_key = st.session_state.get('api_key', '')
 
