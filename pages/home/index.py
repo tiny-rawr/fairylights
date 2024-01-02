@@ -36,3 +36,8 @@ def home():
     st.write("Upload transcripts of user interviews, YouTube videos, podcasts etc and get back direct quotes that are related to specific questions or topics.")
     st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=transcript-analyser)")
     st.image("images/featured/transcript_analyser.png", use_column_width=True)
+
+    st.subheader("Ask Your Database")
+    st.write("Upload CSV files, ask questions about your data in plain english and this GenAI program with auto-generate and execute a SQL statement to retrieve the data you need to answer the question.")
+    st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=ask-your-database)")
+    st.image("images/featured/ask_your_database.png", use_column_width=True)
