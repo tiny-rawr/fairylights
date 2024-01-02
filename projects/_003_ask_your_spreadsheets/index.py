@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit as st
 import pandas as pd
 import sqlite3
 
@@ -29,20 +28,28 @@ def project_details():
 def step_1():
     st.title("Step 1/2: Upload CSV Files")
 
-    uploaded_files = st.file_uploader("Upload CSV files", type=['csv'], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload CSV Files", type=["csv"], accept_multiple_files=True)
 
     if uploaded_files:
-        file_names = [file.name for file in uploaded_files]
-        selected_file = st.selectbox("Select a CSV file to view", file_names)
+        conn = sqlite3.connect(':memory:')
+        dataframes = {}
 
-        st.write(f"Viewing '{selected_file}'")
-        selected_file_index = file_names.index(selected_file)
-        selected_df = pd.read_csv(uploaded_files[selected_file_index])
-        st.dataframe(selected_df)
+        for file in uploaded_files:
+            df = pd.read_csv(file)
+            df.columns = [col.replace(' ', '_') for col in df.columns]
+            table_name = file.name.split('.')[0]
+            dataframes[file.name] = df
+            df.to_sql(table_name, conn, index=False)
+
+        selected_file_view = st.selectbox("Choose a Spreadsheet:", list(dataframes.keys()))
+
+        if selected_file_view:
+            selected_dataframe_view = dataframes[selected_file_view]
+            st.subheader(f"Viewing {selected_file_view}")
+            st.write(selected_dataframe_view)
 
         if st.button("Finished Uploading Data"):
             st.session_state.step = 2
-            st.session_state.selected_df = selected_df  # Store selected DataFrame for Step 2
 
 # Step 2: Ask Questions and Display SQL Query and Results
 def step_2():
@@ -51,9 +58,6 @@ def step_2():
 
     question = st.text_input("Question:")
     if st.button("Ask Question"):
-        selected_df = st.session_state.selected_df  # Retrieve selected DataFrame from Step 1
-        table_name = selected_df.name  # Use the DataFrame name as the table name
-
         # Generate SQL query with the dynamic table name
         sql_query = f"SELECT * FROM 'doctors'"
         st.write("Generated SQL Query:")
