@@ -26,7 +26,7 @@ projects = {
     "Home": {"function": home, "tags": [], "published": True},
     "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI"], "published": True},
     "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["OpenAI"], "published": True},
-    "#3. Ask Your Spreadsheets": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas"], "published": False},
+    "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas"], "published": True},
 }
 
 # Add slugs dynamically
