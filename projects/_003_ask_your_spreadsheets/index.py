@@ -19,10 +19,8 @@ def project_details():
         st.markdown("- 🌳 **Environmental Data Analysis**: Use datasets related to climate, pollution levels, or wildlife populations. This might answer queries like, 'What has been the average air quality index in urban areas over the past five years?' and generate questions like, 'What is the correlation between temperature changes and wildlife migration patterns?'")
         st.markdown("- 🚂 **Transportation and Logistics**: Work with data related to public transportation usage, traffic patterns, and logistic operations. This can help in answering questions such as, 'What are the peak hours for public transportation usage in major cities?' or suggest questions like, 'How do weather conditions affect transportation delays?'")
         st.subheader("Limitations")
-        st.write('I initially planned to let people connect to their own database, like MySQL/PostgreSQL by entering their database connection details, but decided against this for security reasons, so you have to export your databases to CSV files and upload each time you want to ask questions.')
+        st.error('⚠️ **CSV format only**: I initially planned to let people connect to their own database, like MySQL/PostgreSQL by entering their database connection details, but decided against this for security reasons, so you have to export your databases to CSV files and upload each time you want to ask questions.')
         st.error("⚠️ **Accuracy**: SQL statements are not always correct, and can struggle with very complex queries involving 2+ datasets.")
-        st.subheader("Extra")
-        st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
         st.write("")
 
 def csv_file_viewer(dataframes):
