@@ -5,7 +5,6 @@ from projects._003_ask_your_spreadsheets.gpt_api_calls import generate_sql_state
 
 def project_header():
     st.title('📈 Ask Your Database')
-    st.warning('Use-case in progress 🥰 (build in public)')
     st.write("Upload your databases (as CSV files), and ask questions in plain english. This program will auto-generate and execute SQL queries to retrieve the data needed to answer your question. It can also generate question ideas to help you get the most business insight from your data.")
 
 def project_details():
@@ -102,19 +101,19 @@ def step_1():
 
         st.session_state['conn'] = conn
         st.session_state['dataframes'] = dataframes
-        st.session_state.upload_completed = True  # Set the flag to true after processing files
+        st.session_state.upload_completed = True
 
     if st.button("Finished Uploading Data") or st.session_state.upload_completed:
         if 'dataframes' in st.session_state and st.session_state['dataframes']:
             st.session_state.step = 2
-            st.session_state.upload_completed = False  # Reset the flag after moving to the next step
+            st.session_state.upload_completed = False
         else:
             st.warning("Please upload at least one CSV file to proceed.")
 
 def step_2():
     st.title("Step 2/2: Ask a Question")
 
-    question = st.text_input("Question:", value="Show me everything in [table name] table")
+    question = st.text_area("Question:", value="Show me everything in X table")
     if st.button("Ask Question"):
         api_key = st.session_state.get('api_key', '')
 
