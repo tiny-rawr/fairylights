@@ -84,6 +84,10 @@ def step_1():
     st.title("Step 1/2: Upload CSV Files")
     uploaded_files = st.file_uploader("Upload CSV Files", type=["csv"], accept_multiple_files=True)
 
+    # Create a temporary state variable to track the upload completion
+    if 'upload_completed' not in st.session_state:
+        st.session_state.upload_completed = False
+
     if uploaded_files:
         conn = get_sql_connection()
         drop_all_tables(conn)
@@ -98,9 +102,14 @@ def step_1():
 
         st.session_state['conn'] = conn
         st.session_state['dataframes'] = dataframes
+        st.session_state.upload_completed = True  # Set the flag to true after processing files
 
-        if st.button("Finished Uploading Data"):
+    if st.button("Finished Uploading Data") or st.session_state.upload_completed:
+        if 'dataframes' in st.session_state and st.session_state['dataframes']:
             st.session_state.step = 2
+            st.session_state.upload_completed = False  # Reset the flag after moving to the next step
+        else:
+            st.warning("Please upload at least one CSV file to proceed.")
 
 def step_2():
     st.title("Step 2/2: Ask a Question")
