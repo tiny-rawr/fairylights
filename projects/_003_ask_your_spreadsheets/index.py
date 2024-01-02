@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+from projects._003_ask_your_spreadsheets.gpt_api_calls import generate_sql_statement
 
 def project_details():
     st.title('📈 Ask Your Database')
@@ -23,11 +24,43 @@ def project_details():
         st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
         st.write("")
 
+def get_table_schemas_with_data(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    table_names = cursor.fetchall()
+    schemas_with_data = ""
 
-# Step 1: Upload CSV Files
+    for table_name in table_names:
+        cursor.execute(f"PRAGMA table_info('{table_name[0]}')")
+        columns = cursor.fetchall()
+        table_schemas = f"CREATE TABLE {table_name[0]} (\n"
+        data_query = f"SELECT * FROM {table_name[0]} LIMIT 1;"
+        cursor.execute(data_query)
+        first_row_data = cursor.fetchone()
+
+        for column in columns:
+            column_name = column[1].replace(' ', '_')
+            column_type = column[2]
+            # Exclude long text content by checking column type
+            if "text" not in column_type.lower():
+                table_schemas += f"    {column_name} {column_type},\n"
+
+        table_schemas = table_schemas.rstrip(",\n") + "\n);\n\n"
+        # Append the first row data (excluding long text content)
+        table_schemas += f"First Row Data: {first_row_data}\n\n"
+        schemas_with_data += table_schemas
+
+    return schemas_with_data
+
+def execute_sql_statement(conn, sql_statement):
+    try:
+        result = pd.read_sql_query(sql_statement, conn)
+        return result
+    except Exception as e:
+        return None
+
 def step_1():
     st.title("Step 1/2: Upload CSV Files")
-
     uploaded_files = st.file_uploader("Upload CSV Files", type=["csv"], accept_multiple_files=True)
 
     if uploaded_files:
@@ -41,38 +74,35 @@ def step_1():
             dataframes[file.name] = df
             df.to_sql(table_name, conn, index=False)
 
-        selected_file_view = st.selectbox("Choose a Spreadsheet:", list(dataframes.keys()))
-
-        if selected_file_view:
-            selected_dataframe_view = dataframes[selected_file_view]
-            st.subheader(f"Viewing {selected_file_view}")
-            st.write(selected_dataframe_view)
+        st.session_state['conn'] = conn  # Save the connection to session state
+        st.session_state['dataframes'] = dataframes  # Save dataframes to session state
 
         if st.button("Finished Uploading Data"):
             st.session_state.step = 2
 
-# Step 2: Ask Questions and Display SQL Query and Results
 def step_2():
     st.title("Step 2/2: Ask a Question")
     st.write("Enter a question in plain English")
 
     question = st.text_input("Question:")
     if st.button("Ask Question"):
-        # Generate SQL query with the dynamic table name
-        sql_query = f"SELECT * FROM 'doctors'"
-        st.write("Generated SQL Query:")
-        st.code(sql_query, language='sql')
+        conn = st.session_state['conn']
+        table_schemas = get_table_schemas_with_data(conn)  # Use the function from your first example
+        sql_statement = generate_sql_statement(question, table_schemas)
 
-        # Execute the SQL query (replace with your database connection and query execution logic)
-        conn = sqlite3.connect('your_database.db')
-        result_df = pd.read_sql_query(sql_query, conn)
-        conn.close()
+        if sql_statement:
+            st.write("Generated SQL Query:")
+            st.code(sql_statement, language='sql')
 
-        st.write("Results:")
-        st.dataframe(result_df)
+            result_df = execute_sql_statement(conn, sql_statement)  # Use the function from your first example
 
-        if st.button("Ask Another Question"):
-            st.session_state.step = 1
+            if result_df is not None and not result_df.empty:
+                st.write("Results:")
+                st.dataframe(result_df)
+            else:
+                st.info("No results or unable to execute the query.")
+        else:
+            st.warning("Failed to generate SQL statement.")
 
 def ask_your_spreadsheets():
     project_details()
