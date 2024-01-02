@@ -3,11 +3,13 @@ import pandas as pd
 import sqlite3
 from projects._003_ask_your_spreadsheets.gpt_api_calls import generate_sql_statement
 
-def project_details():
+def project_header():
     st.title('📈 Ask Your Database')
     st.warning('Use-case in progress 🥰 (build in public)')
     st.write("Upload your databases (as CSV files), and ask questions in plain english. This program will auto-generate and execute SQL queries to retrieve the data needed to answer your question. It can also generate question ideas to help you get the most business insight from your data.")
 
+def project_details():
+    project_header()
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
         st.write("One of the founders at my co-working space said one of their biggest pain points for their data business was being able to answer complex questions about their industry based on the data because 1) The data was spread across multiple spreadsheets and was difficult to find, and 2) Writing queries to retrieve data based on complex questions required time and expertise. I thought that GenAI could be used to solve this.")
@@ -23,6 +25,13 @@ def project_details():
         st.subheader("Extra")
         st.markdown("- 💌 Read the [newsletter about this](https://fairylightsai.substack.com/p/4-ask-questions-about-interview-transcripts).")
         st.write("")
+
+def csv_file_viewer(dataframes):
+    project_header()
+    with st.expander("📊 View Uploaded CSV Files"):
+        selected_file = st.selectbox("Choose a File to View:", list(dataframes.keys()))
+        if selected_file:
+            st.dataframe(dataframes[selected_file])
 
 def get_table_schemas_with_data(conn):
     cursor = conn.cursor()
@@ -46,7 +55,6 @@ def get_table_schemas_with_data(conn):
                 table_schemas += f"    {column_name} {column_type},\n"
 
         table_schemas = table_schemas.rstrip(",\n") + "\n);\n\n"
-        # Append the first row data (excluding long text content)
         table_schemas += f"First Row Data: {first_row_data}\n\n"
         schemas_with_data += table_schemas
 
@@ -74,27 +82,31 @@ def step_1():
             dataframes[file.name] = df
             df.to_sql(table_name, conn, index=False)
 
-        st.session_state['conn'] = conn  # Save the connection to session state
-        st.session_state['dataframes'] = dataframes  # Save dataframes to session state
+        st.session_state['conn'] = conn
+        st.session_state['dataframes'] = dataframes
 
         if st.button("Finished Uploading Data"):
             st.session_state.step = 2
 
 def step_2():
     st.title("Step 2/2: Ask a Question")
-    st.write("Enter a question in plain English")
 
-    question = st.text_input("Question:")
+    question = st.text_input("Question:", value="Show me all everything in [table name] table")
     if st.button("Ask Question"):
+        api_key = st.session_state.get('api_key', '')
+
+        if not api_key:
+            st.error("🔐  Please enter an OpenAI API key in the sidebar to proceed.")
+            return
         conn = st.session_state['conn']
-        table_schemas = get_table_schemas_with_data(conn)  # Use the function from your first example
+        table_schemas = get_table_schemas_with_data(conn)
         sql_statement = generate_sql_statement(question, table_schemas)
 
         if sql_statement:
             st.write("Generated SQL Query:")
             st.code(sql_statement, language='sql')
 
-            result_df = execute_sql_statement(conn, sql_statement)  # Use the function from your first example
+            result_df = execute_sql_statement(conn, sql_statement)
 
             if result_df is not None and not result_df.empty:
                 st.write("Results:")
@@ -105,12 +117,12 @@ def step_2():
             st.warning("Failed to generate SQL statement.")
 
 def ask_your_spreadsheets():
-    project_details()
-
     if 'step' not in st.session_state:
         st.session_state.step = 1
 
     if st.session_state.step == 1:
+        project_details()
         step_1()
     elif st.session_state.step == 2:
+        csv_file_viewer(st.session_state['dataframes'])
         step_2()
