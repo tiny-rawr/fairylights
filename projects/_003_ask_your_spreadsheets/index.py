@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 from projects._003_ask_your_spreadsheets.gpt_api_calls import generate_sql_statement
+from mixpanel import Mixpanel
+mp = Mixpanel(st.secrets["mixpanel"]["token"])
 
 def project_header():
     st.title('📈 Ask Your Database')
@@ -71,11 +73,20 @@ def get_table_schemas_with_data(conn):
     return schemas_with_data
 
 def execute_sql_statement(conn, sql_statement):
+    rows_returned = False
     try:
         result = pd.read_sql_query(sql_statement, conn)
-        return result
+        if not result.empty:
+            rows_returned = True
     except Exception as e:
-        return None
+        pass
+    finally:
+        mp.track(st.session_state['session_id'], "Run SQL Query", {
+            "Rows Returned": rows_returned,
+            'Page Name': 'Ask Your Database'
+        })
+
+    return result if rows_returned else None
 
 def step_1():
     st.title("Step 1/2: Upload CSV Files")
@@ -103,6 +114,10 @@ def step_1():
 
     if st.button("Finished Uploading Data") or st.session_state.upload_completed:
         if 'dataframes' in st.session_state and st.session_state['dataframes']:
+            mp.track(st.session_state['session_id'], "Upload CSV files", {
+                "Number of CSV files uploaded": len(st.session_state['dataframes']),
+                'Page Name': 'Ask Your Database'
+            })
             st.session_state.step = 2
             st.session_state.upload_completed = False
         else:
