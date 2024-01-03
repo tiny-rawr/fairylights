@@ -3,22 +3,6 @@ import streamlit as st
 import json
 import re
 
-def answer_question(user_question, table_rows):
-    api_key = st.session_state.api_key
-    client = OpenAI(api_key=api_key)
-
-    conversation = [
-        {"role": "system", "content": "Answer the following question as fully as possible using only the information provided."},
-        {"role": "user", "content": f"Question: {user_question}. Answer that question with this info in plain simple and easy to understand language: {table_rows}"},
-    ]
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=conversation
-    )
-
-    return response.choices[0].message.content
-
-
 def generate_sql_statement(user_question, table_schemas):
     api_key = st.session_state.api_key
     client = OpenAI(api_key=api_key)
