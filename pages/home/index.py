@@ -41,3 +41,8 @@ def home():
     st.write("Upload CSV files, ask questions about your data in plain english and this GenAI program with auto-generate and execute a SQL statement to retrieve the data you need to answer the question.")
     st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=ask-your-database)")
     st.image("images/featured/ask_your_database.png", use_column_width=True)
+
+    st.subheader("Lip Syncing Avatar")
+    st.write("Turn any character image into a lip-syncing avatar that you can use in product demos, to bring your children's stories to life or create virtual gift cards!")
+    st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=lip-syncing-avatar)")
+    st.image("images/featured/lip_syncing_avatar.png", use_column_width=True)
