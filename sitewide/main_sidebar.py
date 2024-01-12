@@ -30,7 +30,7 @@ projects = {
     "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["OpenAI"], "published": True},
     "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas"], "published": True},
     "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["OpenAI", "HeyGen"], "published": True},
-    "#5. Avatar Debate": {"function": avatar_debate, "tags": ["OpenAI", "HeyGen"], "published": True},
+    "#5. Chatty Character": {"function": avatar_debate, "tags": ["OpenAI", "HeyGen"], "published": True},
 }
 
 # Add slugs dynamically

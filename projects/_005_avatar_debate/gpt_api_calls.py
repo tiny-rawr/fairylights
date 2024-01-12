@@ -26,7 +26,7 @@ def create_avatar_image(character_name, character_description):
             image_bytes = base64.b64decode(image_data)
             image = Image.open(BytesIO(image_bytes))
             character_image_path = character_name.lower().replace(" ", "_")
-            filename = f"projects/_005_avatar_debate/{character_image_path}.png"
+            filename = f"projects/_005_avatar_debate/photo.png"
             image.save(filename, format="PNG")
 
             return filename
