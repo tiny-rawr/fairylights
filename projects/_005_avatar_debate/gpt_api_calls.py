@@ -11,7 +11,7 @@ def create_avatar_image(character):
 
     response = client.images.generate(
         model="dall-e-3",
-        prompt=f"3D character with white background {character}",
+        prompt=f"Create a character image in a 3D style for {character}. There should be a single character.",
         size="1024x1792",
         quality="standard",
         n=1,
@@ -25,8 +25,10 @@ def create_avatar_image(character):
             # Decode the base64 string to bytes
             image_bytes = base64.b64decode(image_data)
             image = Image.open(BytesIO(image_bytes))
-            image.save("projects/_005_avatar_debate/photo.png", format="PNG")
+            character_image_path = character.lower().replace(" ", "_")
+            filename = f"projects/_005_avatar_debate/{character_image_path}.png"
+            image.save(filename, format="PNG")
 
-            return "Image saved as 'photo.png'"
+            return filename
 
     return "Failed to generate the image"

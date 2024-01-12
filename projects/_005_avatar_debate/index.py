@@ -3,16 +3,13 @@ from projects._005_avatar_debate.gooey_api_calls import generate_talking_avatar
 from projects._005_avatar_debate.gpt_api_calls import create_avatar_image
 
 def avatar_debate():
-    st.title("Lip Syncing Avatar App")
+    st.title("Avatar Debate")
+    st.write("Watch as your favourite characters debate a given topic, and join in on the conversation if you want. Multi-model project including character image generation, conversation generation, text-to-speech and lip-syncing avatar generation.")
 
-    #image = "projects/_005_avatar_debate/photo.png"
     audio = "projects/_005_avatar_debate/audio.wav"
 
-    #avatar_url = generate_talking_avatar(image, audio)
-
-    #st.video(avatar_url)
-
     character_name = st.text_input("Character name", value="Harry Potter")
+    character2_name = st.text_input("Character name", value="Voldemort")
 
     submit_button = st.button("Generate Talking Avatar")
 
@@ -23,19 +20,32 @@ def avatar_debate():
             st.error("🔐  Please enter an OpenAI API key in the sidebar to proceed.")
             return
 
-        character_img = create_avatar_image(character_name)
-        print(character_img)
-        character_image = "projects/_005_avatar_debate/photo.png"
+
+        # Generate character images
+        character_image = create_avatar_image(character_name)
+        character2_image = create_avatar_image(character2_name)
 
         col1, col2 = st.columns(2)
 
         with col1:
-            st.image(character_image)
-            st.write("Caption for Image 1")
+            character = st.empty()
+            caption = st.empty()
+            character.image(character_image)
+            caption.write(f"Caption for Image {character_name}")
+
 
         with col2:
-            avatar_url = generate_talking_avatar(character_image, audio)
-            st.video(avatar_url)
+            character2 = st.empty()
+            caption2 = st.empty()
+            print(character2_image)
+            character2.image(character2_image)
+            caption2.write(f"Caption for Image {character2_name}")
+
+        avatar_url = generate_talking_avatar(character_image, audio)
+        character.video(avatar_url)
+        avatar2_url = generate_talking_avatar(character2_image, audio)
+        character2.video(avatar2_url)
+
 
 if __name__ == "__main__":
     avatar_debate()
