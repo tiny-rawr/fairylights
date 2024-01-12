@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 from projects._005_avatar_debate.gooey_api_calls import generate_talking_avatar
-api_key = "sk-LaCFnN1i18qlrf6wVNPKER7dDEwPJjWe1sJl19RMQnpIv23V"
 import json
 
 def avatar_debate():
