@@ -4,6 +4,7 @@ from projects._001_thought_checker.index import thought_checker
 from projects._002_interview_analyser.index import interview_analyser
 from projects._003_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._004_lip_syncing_avatar.index import lip_syncing_avatar
+from projects._005_avatar_debate.index import avatar_debate
 import re
 
 def is_valid_api_key(api_key):
@@ -29,6 +30,7 @@ projects = {
     "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["OpenAI"], "published": True},
     "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas"], "published": True},
     "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["OpenAI", "HeyGen"], "published": True},
+    "#5. Avatar Debate": {"function": avatar_debate, "tags": ["OpenAI", "HeyGen"], "published": True},
 }
 
 # Add slugs dynamically
