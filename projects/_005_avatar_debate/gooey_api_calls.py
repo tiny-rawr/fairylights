@@ -2,7 +2,6 @@ import requests
 import json
 import streamlit as st
 
-
 def generate_talking_avatar(image_filepath, audio_filepath):
     api_key = st.secrets["gooey"]["gooey_api_key"]
 

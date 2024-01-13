@@ -42,11 +42,11 @@ def chat_to_avatar(message, character_image, character_description, gender):
 
 def avatar_debate():
     st.title("Chatty Character")
-    st.markdown("Create a custom character, and chat to them via text. They'll respond to you by actually speaking. You can swap out the free lip-syncing API I used ([GooeyAI](gooey.ai/lipsync-maker)) for a higher-quality paid version for better results (like [Verbalate](verbalate.ai), [HeyGen](heygen.com) or [D-ID](https://www.d-id.com/)).")
+    st.markdown("Create a custom character, and chat to them via text and they'll respond to you by actually speaking. You can swap out the free lip-syncing API I used ([GooeyAI](gooey.ai/lipsync-maker)) for a higher-quality paid version for better results (like [Verbalate](verbalate.ai), [HeyGen](heygen.com) or [D-ID](https://www.d-id.com/)).")
 
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
-        st.markdown("After creating the talking avatar demo video using online tools in the previous project, I wanted to play around with using APIs to do this programatically.")
+        st.write("After creating the talking avatar demo video using online tools in [the previous project](https://100-genai-projects.streamlit.app/?project=lip-syncing-avatar), I wanted to play around with using APIs to do this programatically.")
         st.subheader("Ways to use this")
         st.markdown("- 🎙️ **Virtual debates**: Create two avatars and get them to have a debate on a topic where they respond to each other. Maybe you could jump in on the conversation too!")
         st.markdown("- 🎓 **Generate 3D avatar lectures**: Learn science by generating an avatar of Richard Feynman and ask him to explain physics in 6 easy pieces. The character chatting can be more engaging that reading text responses.")
@@ -71,6 +71,7 @@ def avatar_debate():
     # Character Information Form
     if len(st.session_state['conversation_history']) == 0:
         with st.form("Character Information"):
+            st.subheader("Create your character")
             st.session_state['character_info']['character_name'] = st.text_input("Character Name", st.session_state['character_info']['character_name'])
             st.session_state['character_info']['age'] = st.number_input("Age", min_value=0, value=st.session_state['character_info']['age'])
             st.session_state['character_info']['gender'] = st.radio("Gender", ["Female", "Male", "Other"], index=["Female", "Male", "Other"].index(st.session_state['character_info']['gender']))
