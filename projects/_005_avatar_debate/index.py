@@ -14,15 +14,15 @@ def generate_new_avatar(character_name, character_description, gender, progress)
     character_image = create_avatar_image(character_name, character_description)
 
     # Step 2: Generate audio
-    progress.info("2/3) Generating Audio from response")
-    text_to_speech(gender, f"Hello, my name is {character_name}!")
+    intro_message = f"Hello, my name is {character_name}!"
+    text_to_speech(gender, intro_message)
     audio = "projects/_005_avatar_debate/audio.wav"
 
     # Step 3: Generate lip-syncing character
     progress.info("3/3) Generating Lip Syncing character with Gooey.AI")
     avatar_url = generate_talking_avatar(character_image, audio)
 
-    return avatar_url
+    return avatar_url, intro_message
 
 def chat_to_avatar(message, character_image, character_description, gender, progress):
     response = respond_to_message(message, character_description)
@@ -37,7 +37,7 @@ def chat_to_avatar(message, character_image, character_description, gender, prog
     progress.info("2/2) Generating Lip Syncing character with Gooey.AI")
     avatar_url = generate_talking_avatar(character_image, audio)
 
-    return avatar_url
+    return avatar_url, response
 
 def avatar_debate():
     st.title("Chatty Character")
@@ -58,14 +58,16 @@ def avatar_debate():
         submit_button = st.form_submit_button("Generate Character")
 
     character = st.empty()
+    captions = st.empty()
     progress = st.empty()
 
     if submit_button:
-        avatar_url = generate_new_avatar(character_name, character_description, gender, progress)
+        avatar_url, intro_message = generate_new_avatar(character_name, character_description, gender, progress)
 
         if avatar_url:
             character.video(avatar_url)
 
+        captions.text(intro_message)
         progress.empty()
 
     message = st.text_area("Write message")
@@ -73,10 +75,12 @@ def avatar_debate():
 
     if submit:
         character_image = "projects/_005_avatar_debate/photo.png"
-        avatar_url = chat_to_avatar(message, character_image, character_description, gender, progress)
+        avatar_url, response = chat_to_avatar(message, character_image, character_description, gender, progress)
 
         if avatar_url:
             character.video(avatar_url)
+
+        captions.text(response)  # Display captions below the avatar video
 
         progress.empty()
 
