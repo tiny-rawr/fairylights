@@ -46,3 +46,8 @@ def home():
     st.write("Turn any character image into a lip-syncing avatar that you can use in product demos, to bring your children's stories to life or create virtual gift cards!")
     st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=lip-syncing-avatar)")
     st.image("images/featured/lip_syncing_avatar.png", use_column_width=True)
+
+    st.subheader("Chatty Characters")
+    st.write("Generate a 3D avatar character and then chat to them via text, they will respond back to you by talking! The voice matches character gender too (male, female, other).")
+    st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=chatty-character)")
+    st.image("images/featured/chatty_characters.png", use_column_width=True)
