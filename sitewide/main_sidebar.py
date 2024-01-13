@@ -26,11 +26,11 @@ def create_slug(name):
 # Define the projects dictionary with dynamically generated slugs
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
-    "#1. Thought Checker": {"function": thought_checker, "tags": ["OpenAI"], "published": True},
-    "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["OpenAI"], "published": True},
-    "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["OpenAI", "Pandas"], "published": True},
-    "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["OpenAI", "HeyGen"], "published": True},
-    "#5. Chatty Character": {"function": avatar_debate, "tags": ["OpenAI", "HeyGen"], "published": True},
+    "#1. Thought Checker": {"function": thought_checker, "tags": ["Text generation", "Text extraction"], "skills": ["Text generation", "Text extraction"], "published": True},
+    "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["Text extraction"], "skills": ["Text extraction"], "published": True},
+    "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["Code generation"], "published": True},
+    "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["Image generation", "Lip syncing", "Voice cloning", "Video generation"], "published": True},
+    "#5. Chatty Character": {"function": avatar_debate, "tags": ["Text generation","Image generation", "Text-to-speech", "Lip syncing"], "published": True},
 }
 
 # Add slugs dynamically
@@ -43,6 +43,13 @@ def get_unique_tags():
         for tag in project["tags"]:
             unique_tags.add(tag)
     return list(unique_tags)
+
+def get_unique_skills():
+    unique_skills = set()
+    for project in projects.values():
+        for skill in project["skills"]:
+            unique_skills.add(skill)
+    return list(unique_skills)
 
 def sidebar():
     with st.sidebar:
@@ -80,7 +87,7 @@ def sidebar():
             else:
                 st.error("Please enter a valid OpenAI API key.")
 
-        with st.expander("Filter projects by tools used"):
+        with st.expander("Filter projects by skills used"):
             selected_tags = []
             all_tags = get_unique_tags()
 
