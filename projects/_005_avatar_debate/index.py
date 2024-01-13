@@ -14,6 +14,7 @@ def generate_new_avatar(character_name, character_description, gender, progress)
     character_image = create_avatar_image(character_name, character_description)
 
     # Step 2: Generate audio
+    progress.info("2/3) Generating audio with OpenAI's text-to-speech")
     intro_message = f"Hello, my name is {character_name}!"
     text_to_speech(gender, intro_message)
     audio = "projects/_005_avatar_debate/audio.wav"
@@ -24,9 +25,9 @@ def generate_new_avatar(character_name, character_description, gender, progress)
 
     return avatar_url, intro_message
 
-def chat_to_avatar(message, character_image, character_description, gender, progress):
+def chat_to_avatar(message, character_image, character_description, gender):
     response = respond_to_message(message, character_description)
-    print(response)
+    progress = st.empty()
 
     # Step 2: Generate audio
     progress.info("1/2) Generating Audio from response")
@@ -93,11 +94,11 @@ def avatar_debate():
         max_index = len(st.session_state['conversation_history']) - 1
 
         col1, col2 = st.columns(2)
-        if current_index > 0 and col1.button('Previous'):
+        if current_index > 0 and col1.button(f'Previous'):
             st.session_state['current_index'] -= 1
             current_index -= 1
 
-        if current_index < max_index and col2.button('Next'):
+        if current_index < max_index and col2.button(f'Next'):
             st.session_state['current_index'] += 1
             current_index += 1
 
@@ -114,11 +115,9 @@ def avatar_debate():
         submit = st.button("Submit")
 
         if submit:
-            character_name = st.session_state['character_info']['character_name']
             character_description = f"Age: {st.session_state['character_info']['age']} years old.\nGender: {st.session_state['character_info']['gender']}.\nEyes: {st.session_state['character_info']['eye_color']} eyes.\nHair: {st.session_state['character_info']['hair_description']}.\nClothing: {st.session_state['character_info']['clothing_description']}"
             gender = st.session_state['character_info']['gender']
-            progress = st.empty()
-            avatar_url, response = chat_to_avatar(message, "projects/_005_avatar_debate/photo.png", character_description, gender, progress)
+            avatar_url, response = chat_to_avatar(message, "projects/_005_avatar_debate/photo.png", character_description, gender)
             if avatar_url:
                 st.session_state['conversation_history'].append({
                     'message': message,
