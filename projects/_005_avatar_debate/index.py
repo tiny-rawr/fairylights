@@ -42,7 +42,18 @@ def chat_to_avatar(message, character_image, character_description, gender):
 
 def avatar_debate():
     st.title("Chatty Character")
-    st.write("Chat to a custom character. Record or type a message, and your avatar will chat back to you (speech, lip syncing, emotions and gestures).")
+    st.markdown("Create a custom character, and chat to them via text. They'll respond to you by actually speaking. You can swap out the free lip-syncing API I used ([GooeyAI](gooey.ai/lipsync-maker)) for a higher-quality paid version for better results (like [Verbalate](verbalate.ai), [HeyGen](heygen.com) or [D-ID](https://www.d-id.com/)).")
+
+    with st.expander("✨ See project details"):
+        st.subheader("Why I built this")
+        st.markdown("After creating the talking avatar demo video using online tools in the previous project, I wanted to play around with using APIs to do this programatically.")
+        st.subheader("Ways to use this")
+        st.markdown("- 🎙️ **Virtual debates**: Create two avatars and get them to have a debate on a topic where they respond to each other. Maybe you could jump in on the conversation too!")
+        st.markdown("- 🎓 **Generate 3D avatar lectures**: Learn science by generating an avatar of Richard Feynman and ask him to explain physics in 6 easy pieces. The character chatting can be more engaging that reading text responses.")
+        st.subheader("Limitations")
+        st.error("⚠️ **Low-quality lip-syncing**: I'm using a free API for the lip-syncing because all of the high-quality lip-syncing API's are expensive. If I were to turn this into a production-quality app the investment would be worth it.")
+        st.error("⚠️ **Not real-time (yet)**: The biggest bottleneck is the image generation at the start. The latency of the other steps also means that the conversation isn't real-time.")
+        st.write("")
 
     # Initialize conversation history and character information
     if 'conversation_history' not in st.session_state:
@@ -66,7 +77,7 @@ def avatar_debate():
             st.session_state['character_info']['eye_color'] = st.text_input("Eye Color", st.session_state['character_info']['eye_color'])
             st.session_state['character_info']['hair_description'] = st.text_input("Hair Description", st.session_state['character_info']['hair_description'])
             st.session_state['character_info']['clothing_description'] = st.text_input("Clothing Description", st.session_state['character_info']['clothing_description'])
-            submit_button = st.form_submit_button("Generate Character")
+            submit_button = st.form_submit_button("🚀 Generate Character")
 
             if submit_button:
                 # Extract character details from session state
@@ -112,7 +123,7 @@ def avatar_debate():
     # Message Submission
     if len(st.session_state['conversation_history']) > 0:
         message = st.text_area("Write message")
-        submit = st.button("Submit")
+        submit = st.button("💌 Send Message")
 
         if submit:
             character_description = f"Age: {st.session_state['character_info']['age']} years old.\nGender: {st.session_state['character_info']['gender']}.\nEyes: {st.session_state['character_info']['eye_color']} eyes.\nHair: {st.session_state['character_info']['hair_description']}.\nClothing: {st.session_state['character_info']['clothing_description']}"
