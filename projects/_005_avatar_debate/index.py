@@ -1,8 +1,8 @@
 import streamlit as st
 from projects._005_avatar_debate.gooey_api_calls import generate_talking_avatar
-from projects._005_avatar_debate.gpt_api_calls import create_avatar_image, text_to_speech
+from projects._005_avatar_debate.gpt_api_calls import create_avatar_image, text_to_speech, respond_to_message
 
-def generate_avatar(character_name, character_description, gender, progress):
+def generate_new_avatar(character_name, character_description, gender, progress):
     api_key = st.session_state.get('api_key', '')
 
     if not api_key:
@@ -20,6 +20,21 @@ def generate_avatar(character_name, character_description, gender, progress):
 
     # Step 3: Generate lip-syncing character
     progress.info("3/3) Generating Lip Syncing character with Gooey.AI")
+    avatar_url = generate_talking_avatar(character_image, audio)
+
+    return avatar_url
+
+def chat_to_avatar(message, character_image, character_description, gender, progress):
+    response = respond_to_message(message, character_description)
+    print(response)
+
+    # Step 2: Generate audio
+    progress.info("1/2) Generating Audio from response")
+    text_to_speech(gender, response)
+    audio = "projects/_005_avatar_debate/audio.wav"
+
+    # Step 3: Generate lip-syncing character
+    progress.info("2/2) Generating Lip Syncing character with Gooey.AI")
     avatar_url = generate_talking_avatar(character_image, audio)
 
     return avatar_url
@@ -46,13 +61,24 @@ def avatar_debate():
     progress = st.empty()
 
     if submit_button:
-        avatar_url = generate_avatar(character_name, character_description, gender, progress)
+        avatar_url = generate_new_avatar(character_name, character_description, gender, progress)
 
         if avatar_url:
             character.video(avatar_url)
 
         progress.empty()
-        form_input.empty()
+
+    message = st.text_area("Write message")
+    submit = st.button("submit")
+
+    if submit:
+        character_image = "projects/_005_avatar_debate/photo.png"
+        avatar_url = chat_to_avatar(message, character_image, character_description, gender, progress)
+
+        if avatar_url:
+            character.video(avatar_url)
+
+        progress.empty()
 
 if __name__ == "__main__":
     avatar_debate()

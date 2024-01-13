@@ -4,6 +4,19 @@ import streamlit as st
 from openai import OpenAI
 import base64
 
+def respond_to_message(message, character_description):
+    api_key = st.session_state.api_key
+    client = OpenAI(api_key = api_key)
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": f"You are a helpful assistant. Respond to the following message in 1-3 sentences. Also, this is a description of the character you are in case you are asked: {character_description}"},
+            {"role": "user", "content": message},
+        ]
+    )
+
+    return response.choices[0].message.content
 
 def create_avatar_image(character_name, character_description):
     api_key = st.session_state.api_key
@@ -53,3 +66,6 @@ def text_to_speech(gender="female", text="Hello, my name is Alina!"):
     )
 
     response.stream_to_file(speech_file_path)
+
+if __name__ == "__main__":
+    print(respond_to_message("Hello"))
