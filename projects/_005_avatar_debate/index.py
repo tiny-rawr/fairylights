@@ -44,9 +44,11 @@ def avatar_debate():
     st.title("Chatty Character")
     st.markdown("Create a custom character, and chat to them via text and they'll respond to you by actually speaking. You can swap out the free lip-syncing API I used ([GooeyAI](gooey.ai/lipsync-maker)) for a higher-quality paid version for better results (like [Verbalate](verbalate.ai), [HeyGen](heygen.com) or [D-ID](https://www.d-id.com/)).")
 
-    with st.expander("✨ See project details"):
+    with st.expander("✨ See project details (and demo video)"):
         st.subheader("Why I built this")
         st.write("After creating the talking avatar demo video using online tools in [the previous project](https://100-genai-projects.streamlit.app/?project=lip-syncing-avatar), I wanted to play around with using APIs to do this programatically.")
+        st.subheader("Demo video")
+        st.video("demo_videos/chatty_avatar_demo.mp4")
         st.subheader("Ways to use this")
         st.markdown("- 🎙️ **Virtual debates**: Create two avatars and get them to have a debate on a topic where they respond to each other. Maybe you could jump in on the conversation too!")
         st.markdown("- 🎓 **Generate 3D avatar lectures**: Learn science by generating an avatar of Richard Feynman and ask him to explain physics in 6 easy pieces. The character chatting can be more engaging that reading text responses.")
@@ -94,7 +96,7 @@ def avatar_debate():
                 avatar_url, intro_message = generate_new_avatar(character_name, character_description, gender, progress)
                 if avatar_url:
                     st.session_state['conversation_history'].append({
-                        'message': "Character Introduction",
+                        'message': "What is your name?",
                         'response': intro_message,
                         'avatar_url': avatar_url
                     })
