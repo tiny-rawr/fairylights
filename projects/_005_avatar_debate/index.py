@@ -67,7 +67,7 @@ def avatar_debate():
         if avatar_url:
             character.video(avatar_url)
 
-        captions.text(intro_message)
+        captions.text(f"You: {intro_message}")
         progress.empty()
 
     message = st.text_area("Write message")
@@ -80,7 +80,7 @@ def avatar_debate():
         if avatar_url:
             character.video(avatar_url)
 
-        captions.text(response)  # Display captions below the avatar video
+        captions.text(f"You: {message}.\n{character_name}: {response}")
 
         progress.empty()
 
