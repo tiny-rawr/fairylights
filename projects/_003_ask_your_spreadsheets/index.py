@@ -14,6 +14,8 @@ def project_details():
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
         st.write("One of the founders at my co-working space said one of their biggest pain points for their data business was being able to answer complex questions about their industry based on the data because 1) The data was spread across multiple spreadsheets and was difficult to find, and 2) Writing queries to retrieve data based on complex questions required time and expertise. I thought that GenAI could be used to solve this.")
+        st.subheader("Demo video")
+        st.video("demo_videos/ask_your_spreadsheets_demo.mov")
         st.warning("I initially planned to let people connect to their own database, like MySQL/PostgreSQL by entering their database connection details, but decided against this for security reasons.")
         st.subheader("Ways to use this")
         st.markdown("- 🩺 **Healthcare Data**: Anonymised data around patient records, treatment details, and outcomes data. This would allow for queries like, 'Show the average recovery time for patients aged 60-70 with a specific condition,' or create questions such as, 'Which treatments have the highest success rate for chronic diseases?'")

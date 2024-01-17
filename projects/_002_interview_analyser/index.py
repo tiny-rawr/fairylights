@@ -158,6 +158,8 @@ def display_project_details():
     with st.expander("✨ See project details"):
         st.subheader("Why I built this")
         st.write("A founder friend mentioned they had done around 20 user interviews a while back, but didn't have the time to go through and extract insights related to their questions. They had tried existing tools which were great at sentiment analysis but struggled to extract quotes related to more nuanced domain-specific questions like 'How did members make friends using our service' for example. This solution solved that problem for them and they were able to start actioning insights immediately.")
+        st.subheader("Demo video")
+        st.video("demo_videos/transcript_analyser.mov")
         st.error("⛔️ I would not reccommend this use-case for production based on the limitations section at this stage. But feel free to browse the code (click the reop link in top right corner) and see if you can come up with ways to improve. Let me know if you do!")
         st.subheader("Real-life Impact")
         st.warning("⏰ **Saved time:** Saved founder 30 hours of user interview analysis so they were able to act on insights the same day. When I built the first version, it was way more accurate than this current version and I'm not sure why (OpenAI updated it's API which is why I built a new version, plus the old prompt didn't work anymore).")
