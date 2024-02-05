@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
+import asyncio
 from projects._007_parallel_processor.generate_request_file import generate_chat_completion_requests
+from projects._007_parallel_processor.save_to_csv import save_generated_data_to_csv
+from projects._007_parallel_processor.process_requests import process_api_requests_from_file
 
 def parallel_processor():
     st.title("Parallel Processor")
@@ -17,6 +20,9 @@ def parallel_processor():
         st.error("⚠️ **Cat**: Text.")
         st.write("")
 
+    st.subheader("Step 1: Upload your data")
+    st.write("Lets say you want to translate 1000 blog posts into a different language. The first step is to put each blog post it it's own cell in column A of your spreadsheet. Then export it as a CSV file and upload it here.")
+
     # Set the default CSV file path
     csv_file_path = "projects/_007_parallel_processor/input.csv"
 
@@ -29,7 +35,12 @@ def parallel_processor():
     else:
         df = pd.read_csv(csv_file_path, header=None)
 
-    st.write(df.iloc[:, 0].rename("Your Data"))
+    with st.expander("👀 View your uploaded data"):
+      st.write("If you haven't uploaded your own data yet, you will see our demo data.")
+      st.write(df.iloc[:, 0].rename("Your Data"))
+
+    st.subheader("Step 2: Write a prompt")
+    st.write("Write instructions for what you want to do with a single instance of your data. In this case, we will instruct ChatGPT to translate our blog post into a different language.")
 
     prompt = st.text_area("Enter your prompt here:", value="""Write me a comprehensive and professional medical profile in 3rd person that is factual and starts with the professionals name and title without headings:
 
@@ -49,7 +60,39 @@ def parallel_processor():
     The biography will informative and straightforward. It will presents factual information about a medical professional's background and areas of expertise. The language used will be clear and avoid complex medical jargon, ensuring that the information is easily accessible to a wide range of readers, including non-native English speakers and experts in the field.
     """)
 
-    test_processor = st.button("Parallel process first 10 results (test)")
+    api_key = st.session_state.get('api_key', '')
+    print(api_key)
 
-    if test_processor:
-        generate_chat_completion_requests(csv_file_path, prompt)
+    if not api_key:
+        st.error("🔐  Please enter an OpenAI API key in the sidebar to proceed.")
+        return
+
+    if api_key:
+      test_processor = st.button("Parallel process first 10 results (test)")
+
+      if test_processor:
+          generate_chat_completion_requests(csv_file_path, prompt)
+
+          asyncio.run(
+              process_api_requests_from_file(
+                  requests_filepath="projects/_007_parallel_processor/requests.jsonl",
+                  save_filepath="projects/_007_parallel_processor/requests_completed.jsonl",
+                  request_url="https://api.openai.com/v1/chat/completions",
+                  api_key=api_key,
+                  max_requests_per_minute=float(4500),
+                  max_tokens_per_minute=float(70000),
+                  token_encoding_name="cl100k_base",
+                  max_attempts=int(5),
+                  logging_level=int(20),
+              )
+          )
+
+          #st.write(display_jsonl_contents("projects/_007_parallel_processor/requests_completed.jsonl"))
+
+          save_generated_data_to_csv("projects/_007_parallel_processor/requests_completed.jsonl")
+          df = pd.read_csv("projects/_007_parallel_processor/output.csv")
+          st.dataframe(df)
+
+# Call the parallel_processor function to run the Streamlit app
+if __name__ == "__main__":
+    parallel_processor()
