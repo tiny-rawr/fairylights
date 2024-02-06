@@ -6,66 +6,83 @@ def init_session_state():
         st.session_state.current_step = 1
     if 'data' not in st.session_state:
         st.session_state.data = {}
+    if 'errors' not in st.session_state:
+        st.session_state.errors = {}
 
 def save_input(key, input_data):
     st.session_state.data[key] = input_data
+    # Clear error on successful input
+    if key in st.session_state.errors:
+        del st.session_state.errors[key]
 
 def validate_input(key, value):
     if value:
         save_input(key, value)
         return True
     else:
-        st.error(f"{key.capitalize()} is required.")
+        st.session_state.errors[key] = f"{key.capitalize()} is required."
         return False
 
+def display_errors():
+    for error_message in st.session_state.errors.values():
+        st.error(error_message)
+
 def can_proceed(inputs):
+    st.session_state.errors.clear()  # Clear errors at the beginning of validation
+    validation_passed = True
     for key, value in inputs.items():
         if not validate_input(key, value):
-            return False
-    return True
+            validation_passed = False
+    return validation_passed
+
+def on_click_next(step, inputs=None):
+    if inputs is None or can_proceed(inputs):
+        if not st.session_state.errors:  # Proceed only if there are no errors
+            st.session_state.current_step = step
+
+def on_click_previous():
+    st.session_state.current_step -= 1
 
 def step_1():
     st.subheader("Step 1: Personal Information")
-    st.write("Please enter your name and email address.")
     name = st.text_input("Name", key='name')
     email = st.text_input("Email", key='email')
-
-    if st.button("Save & Next", key='save1', on_click=lambda: save_and_next(2, {'name': name, 'email': email})):
-        pass
+    next1 = st.button("Save & Next")
+    if next1:
+        on_click_next(2, {'name': name, 'email': email})
+    display_errors()
 
 def step_2():
     st.subheader("Step 2: Employment Details")
-    st.write("Share your company name and position.")
     company = st.text_input("Company Name", key='company')
     position = st.text_input("Position", key='position')
-
-    if st.button("Save & Next", key='save2', on_click=lambda: save_and_next(3, {'company': company, 'position': position})):
-        pass
+    next2 = st.button("Save & Next")
+    if next2:
+        on_click_next(3, {'company': company, 'position': position})
+    display_errors()
 
 def step_3():
     st.subheader("Step 3: Preferences")
-    st.write("Would you like to subscribe to our newsletter?")
     newsletter = st.checkbox("Subscribe to newsletter?", key='newsletter')
     save_input('newsletter', newsletter)
-    if st.button("Save & Next", key='save3', on_click=lambda: save_and_next(4)):
-        pass
+    next3 = st.button("Save & Next")
+    if next3:
+        on_click_next(4)
+    display_errors()
 
 def step_4():
     st.subheader("Step 4: Schedule Meeting")
-    st.write("Select a date for the meeting.")
     meeting_date = st.date_input("Meeting Date", key='meeting_date', value=date.today())
-    if st.button("Save & Next", key='save4', on_click=lambda: save_and_next(5, {'meeting_date': meeting_date})):
-        pass
+    next4 = st.button("Save & Next")
+    if next4:
+        on_click_next(5, {'meeting_date': meeting_date})
+    display_errors()
 
 def step_5():
     st.subheader("Step 5: Review & Submit")
-    st.write("Review all the data submitted and click submit if everything is correct.")
-    if st.button("Submit", key='submit', on_click=submit_form):
-        pass
-
-def save_and_next(next_step, inputs=None):
-    if inputs is None or can_proceed(inputs):
-        st.session_state.current_step = next_step
+    submit = st.button("Submit")
+    if submit:
+        submit_form()
 
 def submit_form():
     st.write("All submitted data:")
@@ -73,6 +90,10 @@ def submit_form():
     st.success("Form submitted successfully!")
 
 def render_step(step):
+    if step > 1:
+        if st.button("Previous"):
+            on_click_previous()
+
     if step == 1:
         step_1()
     elif step == 2:
@@ -84,15 +105,9 @@ def render_step(step):
     elif step == 5:
         step_5()
 
-    if step > 1:
-        if st.button("Previous", on_click=go_previous):
-            pass
-
-def go_previous():
-    st.session_state.current_step -= 1
-
 def wizard_steps():
-  init_session_state()
-  render_step(st.session_state.current_step)
+    st.title("Multi-Step Form with Streamlit")
+    init_session_state()
+    render_step(st.session_state.current_step)
 
 wizard_steps()
