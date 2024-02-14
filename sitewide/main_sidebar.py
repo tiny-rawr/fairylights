@@ -1,10 +1,12 @@
 import streamlit as st
 from pages.home.index import home
+from projects._000_wizard_steps.index import wizard_steps
 from projects._001_thought_checker.index import thought_checker
 from projects._002_interview_analyser.index import interview_analyser
 from projects._003_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._004_lip_syncing_avatar.index import lip_syncing_avatar
 from projects._005_avatar_debate.index import avatar_debate
+from projects._006_pitch_panda.index import pitch_panda
 import re
 
 def is_valid_api_key(api_key):
@@ -26,11 +28,13 @@ def create_slug(name):
 # Define the projects dictionary with dynamically generated slugs
 projects = {
     "Home": {"function": home, "tags": [], "published": True},
+    #"Wizard Steps": {"function": wizard_steps, "tags": [], "skills": [], "published": True},
     "#1. Thought Checker": {"function": thought_checker, "tags": ["Text generation", "Text extraction"], "skills": ["Text generation", "Text extraction"], "published": True},
     "#2. Transcript Analyser": {"function": interview_analyser, "tags": ["Text extraction"], "skills": ["Text extraction"], "published": True},
     "#3. Ask Your Database": {"function": ask_your_spreadsheets, "tags": ["Code generation"], "published": True},
     "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["Image generation", "Lip syncing", "Voice cloning", "Video generation"], "published": True},
     "#5. Chatty Character": {"function": avatar_debate, "tags": ["Text generation","Image generation", "Text-to-speech", "Lip syncing"], "published": True},
+    "#6. Pitch Panda": {"function": pitch_panda, "tags": ["IOT", "Text generation", "Text-to-speech"], "published": True},
 }
 
 # Add slugs dynamically
