@@ -7,6 +7,9 @@ def home():
     st.subheader("✨Magical Moments")
     st.warning("- 🏆 I co-won the [people's choice award at Fishburners Young Entrepreneur Pitch Night](https://www.linkedin.com/posts/martinkarafilis_entrepreneurs-genz-ai-activity-7120197635935768576-mG7E) for a robotic plush panda you can have a two-way convo with (collab project with a friend who did the IOT and I did the GenAI). \n - 🚀 One of my proprietry GenAI use-cases (specialist profile generator from scraped data) led to a 350% in organic traffic and 300% increase in patient bookings for a health startup in a single month. \n - 👷 I became a community advisor at [Builders club](https://www.linkedin.com/company/the-builders-club-ai/), and spearhead the [Humans of Builders club series](https://builder-club.beehiiv.com/).")
     with st.expander("🥰 See full timeline of magical milestones!"):
+            st.markdown("**Feb 2023**")
+            st.markdown("- 🎉 Got accepted onto Microsoft's Startup Founder Hub ($2.5k OpenAI credits + more).")
+
             st.markdown("**Dec 2023**")
             st.markdown("- 🎉 Launched this 100 GenAI project site with first use-case.")
 
@@ -26,6 +29,11 @@ def home():
             st.markdown("**Aug 2023**")
             st.markdown("- 🚀 Started Fairylights newsletter ([sign up here](https://fairylightsai.substack.com/)).")
             st.write("")
+
+    st.subheader("Pitch Panda")
+    st.write("A robotic plush panda you can have a two-way convo with! Winner of the People's Choice Award at a Young Entrepreneur Pitch night. Collab project!")
+    st.markdown("[Try it out!](https://100-genai-projects.streamlit.app/?project=pitch-panda)")
+    st.image("images/featured/pitch_panda.png", use_column_width=True)
 
     st.subheader("Thought Checker")
     st.write("Enter a journal entry and this GenAI program will auto-detect unhelpful thinking patterns (cognitive distortions) that are present in your entry, so you can focus on reframing them.")
