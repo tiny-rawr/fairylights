@@ -28,7 +28,7 @@ def display_errors():
         st.error(error_message)
 
 def can_proceed(inputs):
-    st.session_state.errors.clear()  # Clear errors at the beginning of validation
+    st.session_state.errors.clear()
     validation_passed = True
     for key, value in inputs.items():
         if not validate_input(key, value):
@@ -37,7 +37,7 @@ def can_proceed(inputs):
 
 def on_click_next(step, inputs=None):
     if inputs is None or can_proceed(inputs):
-        if not st.session_state.errors:  # Proceed only if there are no errors
+        if not st.session_state.errors:
             st.session_state.current_step = step
 
 def on_click_previous():
