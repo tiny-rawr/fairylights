@@ -66,6 +66,3 @@ def text_to_speech(gender="female", text="Hello, my name is Alina!"):
     )
 
     response.stream_to_file(speech_file_path)
-
-if __name__ == "__main__":
-    #print(respond_to_message("Hello"))
