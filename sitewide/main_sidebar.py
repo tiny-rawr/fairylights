@@ -7,6 +7,7 @@ from projects._003_ask_your_spreadsheets.index import ask_your_spreadsheets
 from projects._004_lip_syncing_avatar.index import lip_syncing_avatar
 from projects._005_avatar_debate.index import avatar_debate
 from projects._006_pitch_panda.index import pitch_panda
+from projects._007_member_discovery.index import member_discovery
 import re
 
 def is_valid_api_key(api_key):
@@ -35,6 +36,7 @@ projects = {
     "#4. Lip Syncing Avatar": {"function": lip_syncing_avatar, "tags": ["Image generation", "Lip syncing", "Voice cloning", "Video generation"], "published": True},
     "#5. Chatty Character": {"function": avatar_debate, "tags": ["Text generation","Image generation", "Text-to-speech", "Lip syncing"], "published": True},
     "#6. Pitch Panda": {"function": pitch_panda, "tags": ["IOT", "Text generation", "Text-to-speech"], "published": True},
+    "#7. Member Discovery": {"function": member_discovery, "tags": ["RAG", "Text generation"], "published": True},
 }
 
 # Add slugs dynamically
