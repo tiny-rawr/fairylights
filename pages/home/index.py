@@ -69,6 +69,4 @@ def home():
                     st.image(project["image"], use_column_width=True)
                     st.subheader(project["title"])
                     st.write(project["description"])
-                    button_key = f"try_it_out_{i + j}"  # Unique key for each button
-                    if st.button('Try it out!', key=button_key):
-                        webbrowser.open(project['url'])
+                    st.markdown(f"👉 [Try it out!]({project['url']})")

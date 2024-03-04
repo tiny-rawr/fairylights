@@ -1,5 +1,4 @@
 import streamlit as st
-import webbrowser
 
 def member_discovery():
     st.title('👷‍♀️ Member Discovery')
@@ -15,5 +14,4 @@ def member_discovery():
         st.subheader("Demo Video")
         st.video("projects/_007_member_discovery/build_bounty_member_chatbot.mp4")
 
-    if st.button('Try live version of Member Discovery'):
-        webbrowser.open('https://build-club-member-discovery.streamlit.app/')
+    st.markdown("👉 [Try live version of Member Discovery](https://build-club-member-discovery.streamlit.app/)")
