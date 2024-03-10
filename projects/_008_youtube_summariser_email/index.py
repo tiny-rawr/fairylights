@@ -1,4 +1,24 @@
 import streamlit as st
+import feedparser
+from youtube_transcript_api import YouTubeTranscriptApi
+
+
+def get_youtube_channel_rss(channel_url):
+    rss_url = f"{channel_url.strip('/')}/videos"
+    feed = feedparser.parse(rss_url)
+    return feed
+
+def get_video_transcript(video_id):
+    transcript_with_timestamps = YouTubeTranscriptApi.get_transcript(video_id)
+    transcript = ' '.join([t['text'] for t in transcript_with_timestamps])
+    return transcript
+
+
+
+
+
+def get_videos_from_rss(link):
+   print(link)
 
 def youtube_summariser():
     st.title('📼️ YouTube Email Summariser Workshop')
@@ -19,3 +39,10 @@ def youtube_summariser():
         st.write("✅ Send an automated email to yourself with YouTube video summaries.")
         st.subheader("Demo Video")
         st.write("[INSERT DEMO VIDEO]")
+
+    #channel_url = st.text_input("Enter URL to your favourite channel", placeholder="https://www.youtube.com/channel/UCznv7Vf9nBdJYvBagFdAHWw")
+    #rss = get_youtube_channel_rss(channel_url)
+    video_id = st.text_input("Enter video id")
+    if video_id:
+      st.write(get_video_transcript(video_id))
+    #st.write(rss)
