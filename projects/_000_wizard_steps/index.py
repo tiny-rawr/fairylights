@@ -109,5 +109,3 @@ def wizard_steps():
     st.title("Multi-Step Form with Streamlit")
     init_session_state()
     render_step(st.session_state.current_step)
-
-wizard_steps()
