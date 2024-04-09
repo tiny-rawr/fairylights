@@ -45,5 +45,5 @@ def youtube_summariser():
                 name = "Tim Ferris"
                 thumbnail = "https://i.imgur.com/BUpvSqA.jpg"
                 st.image(thumbnail, use_column_width=True)
-                html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" target="_blank"><b>{name}</b></a></div>'
+                html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" style="font-size: 14px;" target="_blank"><b>{youtuber}</b></a></div>'
                 st.markdown(html_link, unsafe_allow_html=True)
