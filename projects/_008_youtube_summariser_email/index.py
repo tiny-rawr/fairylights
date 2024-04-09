@@ -1,7 +1,27 @@
 import streamlit as st
 from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details
 
+def display_youtuber_details(usernames):
+    num_cols = 5
 
+    for i, youtuber in enumerate(usernames):
+        youtuber = youtuber.strip()
+        if i % num_cols == 0:
+            cols = st.columns(num_cols)
+
+        col_index = i % num_cols
+
+        with cols[col_index]:
+            # Example values for demonstration purposes
+            # channel_id = get_channel_id_from_username(youtuber.strip())
+            # channel_details = get_channel_details(channel_id)
+            # name = channel_details['snippet']['title']
+            # thumbnail = channel_details['snippet']['thumbnails']['medium']['url']
+            name = "Tim Ferris"
+            thumbnail = "https://i.imgur.com/BUpvSqA.jpg"
+            st.image(thumbnail, use_column_width=True)
+            html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" style="font-size: 14px;" target="_blank"><b>{youtuber}</b></a></div>'
+            st.markdown(html_link, unsafe_allow_html=True)
 def youtube_summariser():
     st.title('📼️ YouTube Email Summariser Workshop')
     st.markdown("Learn how to send yourself a monthly email summarising YouTube videos released by your top 5 favourite channels.")
@@ -30,23 +50,4 @@ def youtube_summariser():
     get_youtubers = st.button("Get Channels")
 
     if youtubers and get_youtubers:
-        num_cols = 5
-
-        for i, youtuber in enumerate(youtubers):
-            youtuber = youtuber.strip()
-            if i % num_cols == 0:
-                cols = st.columns(num_cols)
-
-            col_index = i % num_cols
-
-            with cols[col_index]:
-                # Example values for demonstration purposes
-                # channel_id = get_channel_id_from_username(youtuber.strip())
-                # channel_details = get_channel_details(channel_id)
-                # name = channel_details['snippet']['title']
-                # thumbnail = channel_details['snippet']['thumbnails']['medium']['url']
-                name = "Tim Ferris"
-                thumbnail = "https://i.imgur.com/BUpvSqA.jpg"
-                st.image(thumbnail, use_column_width=True)
-                html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" style="font-size: 14px;" target="_blank"><b>{youtuber}</b></a></div>'
-                st.markdown(html_link, unsafe_allow_html=True)
+        display_youtuber_details(youtubers)
