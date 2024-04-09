@@ -1,5 +1,5 @@
 import streamlit as st
-from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details
+from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details, get_videos_from_playlist
 
 def get_youtuber_details(username):
     channel_id = get_channel_id_from_username(username.strip())
@@ -8,7 +8,8 @@ def get_youtuber_details(username):
         "channel_id": channel_id,
         "channel_username": username.strip(),
         "channel_name": channel_details['snippet']['title'],
-        "thumbnail": channel_details['snippet']['thumbnails']['medium']['url']
+        "thumbnail": channel_details['snippet']['thumbnails']['medium']['url'],
+        "uploads_playlist_id": channel_details['contentDetails']['relatedPlaylists']['uploads']
     }
 def display_youtuber_details(youtubers):
     num_cols = 5
@@ -60,8 +61,9 @@ def youtube_summariser():
     if get_youtubers:
         st.session_state['youtuber_usernames'] = youtubers
 
+    all_youtuber_details = []
+
     if 'youtuber_usernames' in st.session_state:
-        all_youtuber_details = []
         for youtuber_username in st.session_state['youtuber_usernames']:
             details = get_youtuber_details(youtuber_username)
             all_youtuber_details.append(details)
@@ -75,3 +77,6 @@ def youtube_summariser():
 
     if retrieve_videos:
         st.write("Retrieved videos")
+        for youtuber in all_youtuber_details:
+            playlist_id = youtuber["uploads_playlist_id"]
+            get_videos_from_playlist(playlist_id, timeframe_options[selected_timeframe])
