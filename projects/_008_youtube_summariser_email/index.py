@@ -22,6 +22,8 @@ def youtube_summariser():
         st.subheader("Demo Video")
         st.write("[INSERT DEMO VIDEO]")
 
+    st.subheader("Step 1: Get YouTube Channel Details")
+
     youtubers_input = st.text_input("Enter YouTuber usernames (as comma-separated list):", placeholder="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ", value="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ")
     youtubers = youtubers_input.split(",")
 
@@ -31,6 +33,7 @@ def youtube_summariser():
         num_cols = 5
 
         for i, youtuber in enumerate(youtubers):
+            youtuber = youtuber.strip()
             if i % num_cols == 0:
                 cols = st.columns(num_cols)
 
