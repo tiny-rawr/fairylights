@@ -1,5 +1,11 @@
-import streamlit as st
 from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details, get_videos_from_playlist
+import streamlit as st
+import pandas as pd
+
+def load_prompts(url):
+    df = pd.read_csv(url)
+    prompts = df.set_index('Name')['Prompt'].to_dict()
+    return prompts
 
 def get_youtuber_details(username):
     channel_id = get_channel_id_from_username(username.strip())
@@ -69,14 +75,38 @@ def youtube_summariser():
             all_youtuber_details.append(details)
         display_youtuber_details(all_youtuber_details)
 
-    st.subheader("Step 2: Retrieve videos")
+    st.subheader("2: Write prompt instructions")
+    st.write("Tell GPT how you want it to summarise video transcripts. You can try one of our demo prompts below or write your own.")
+
+    with st.expander("📝Prompt writing tips"):
+        st.markdown("Prompt writing tips from [OpenAI's Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results):")
+        st.markdown("- **Write clear instructions:** Describe the steps needed to complete a task. If outputs are too long, ask for brief replies and specify the format you want.")
+        st.markdown("- **Give good examples**: Find a profile you really like and ask an LLM to describe it's writing style and tone. Use that to help you write better bio-writing prompt instructions.")
+        st.markdown("- **Split tasks into simpler subtasks:** For example, if you want both a long and short bio to be used on different parts of the site, create a long bio first and then use that long bio to create the short one in two separate tasks.")
+        st.markdown("- **Adopt a persona:** Ask the model to pretend they are the specialist writing their own bio.")
+        st.markdown("- **Follow-ups**: If you find yourself adding follow-up prompts to modify some part of the output, that might be a good candidate to add back into the original prompt.")
+
+    prompts = load_prompts("https://docs.google.com/spreadsheets/d/e/2PACX-1vTOEXm4-jguHN7ADkLX4dedTAzJ3UAsahHSuhc4T2hAW8PzcsGWaxyUAX4ScuGhW-cyffOAg4IGxWY8/pub?gid=0&single=true&output=csv")
+    selected_prompt = st.selectbox("Use a demo prompt:", options=list(prompts.keys()), index=0, key="prompt_selection")
+    prompt = st.text_area("Write your own prompt:", value=prompts[selected_prompt], height=150, key="prompt_instructions")
+
+    st.subheader("Step 3: Retrieve & Summarise videos")
     timeframe_options = {"Week": 7, "Month": 30, "Quarter": 120}
     selected_timeframe = st.selectbox("Pick the timeframe you want to retrieve videos from:", list(timeframe_options.keys()))
 
     retrieve_videos = st.button(f"Get videos from the last {selected_timeframe.lower()}")
 
     if retrieve_videos:
-        st.write("Retrieved videos")
+        all_videos = []
         for youtuber in all_youtuber_details:
             playlist_id = youtuber["uploads_playlist_id"]
-            get_videos_from_playlist(playlist_id, timeframe_options[selected_timeframe])
+            st.info(f"Getting videos from {youtuber['channel_name']/'s channel'}")
+            videos = get_videos_from_playlist(playlist_id, timeframe_options[selected_timeframe])
+            all_videos.append(videos)
+
+        for index, video in enumerate(all_videos, start=1):
+            st.info(f"Summarising {index}/{len(all_videos)} video")
+            transcript = video['transcript'][:500]
+            st.write(f"Truncated transcript: {transcript}")
+
+

@@ -1,3 +1,4 @@
+from youtube_transcript_api import YouTubeTranscriptApi
 from googleapiclient.discovery import build
 from datetime import datetime, timedelta
 from isodate import parse_duration
@@ -30,6 +31,11 @@ def get_channel_details(channel_id):
 
     return channel_response['items'][0]
 
+def get_video_transcript(video_id):
+    transcript_with_timestamps = YouTubeTranscriptApi.get_transcript(video_id)
+    transcript = ' '.join([t['text'] for t in transcript_with_timestamps])
+    return transcript
+
 def get_videos_from_playlist(playlist_id, days=30):
     youtube_api_key = st.secrets["youtube"]["youtube_api_key"]
 
@@ -48,7 +54,7 @@ def get_videos_from_playlist(playlist_id, days=30):
 
     # Get video durations
     response = requests.get(
-        f'https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id={",".join(video_ids)}&key={api_key}'
+        f'https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id={",".join(video_ids)}&key={youtube_api_key}'
     )
     video_durations = {video['id']: parse_duration(video['contentDetails']['duration']).total_seconds() for video in response.json()['items']}
 
@@ -59,6 +65,7 @@ def get_videos_from_playlist(playlist_id, days=30):
             'description': video['snippet']['description'],
             'thumbnail': video['snippet']['thumbnails']['high']['url'],
             'publishedAt': video['snippet']['publishedAt'],
+            'transcript': get_video_transcript(video['snippet']['resourceId']['videoId']),
             # Filter out YouTube Shorts (60 seconds or less)
             'duration': f"{int(video_durations[video['snippet']['resourceId']['videoId']] // 60)}m {int(video_durations[video['snippet']['resourceId']['videoId']] % 60)}s"
         }
