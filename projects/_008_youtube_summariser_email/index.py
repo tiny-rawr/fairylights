@@ -1,5 +1,6 @@
 import streamlit as st
-from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username
+from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details
+
 
 def youtube_summariser():
     st.title('📼️ YouTube Email Summariser Workshop')
@@ -21,11 +22,28 @@ def youtube_summariser():
         st.subheader("Demo Video")
         st.write("[INSERT DEMO VIDEO]")
 
-    youtubers_input = st.text_input("Enter YouTuber usernames (as comma-separated list):", placeholder="timferris", value="timferris, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ")
+    youtubers_input = st.text_input("Enter YouTuber usernames (as comma-separated list):", placeholder="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ", value="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ")
     youtubers = youtubers_input.split(",")
 
     get_youtubers = st.button("Get Channels")
 
-    if get_youtubers and youtubers:
-        for youtuber in youtubers:
-            st.write(get_channel_id_from_username(youtuber.strip()))
+    if youtubers and get_youtubers:
+        num_cols = 5
+
+        for i, youtuber in enumerate(youtubers):
+            if i % num_cols == 0:
+                cols = st.columns(num_cols)
+
+            col_index = i % num_cols
+
+            with cols[col_index]:
+                # Example values for demonstration purposes
+                # channel_id = get_channel_id_from_username(youtuber.strip())
+                # channel_details = get_channel_details(channel_id)
+                # name = channel_details['snippet']['title']
+                # thumbnail = channel_details['snippet']['thumbnails']['medium']['url']
+                name = "Tim Ferris"
+                thumbnail = "https://i.imgur.com/BUpvSqA.jpg"
+                st.image(thumbnail, use_column_width=True)
+                html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" target="_blank"><b>{name}</b></a></div>'
+                st.markdown(html_link, unsafe_allow_html=True)
