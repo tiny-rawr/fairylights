@@ -1,27 +1,31 @@
 import streamlit as st
 from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details
 
-def display_youtuber_details(usernames):
+def get_youtuber_details(username):
+    channel_id = get_channel_id_from_username(username.strip())
+    channel_details = get_channel_details(channel_id)
+    return {
+        "channel_id": channel_id,
+        "channel_username": username.strip(),
+        "channel_name": channel_details['snippet']['title'],
+        "thumbnail": channel_details['snippet']['thumbnails']['medium']['url']
+    }
+def display_youtuber_details(youtubers):
     num_cols = 5
 
-    for i, youtuber in enumerate(usernames):
-        youtuber = youtuber.strip()
+    for i, youtuber in enumerate(youtubers):
         if i % num_cols == 0:
             cols = st.columns(num_cols)
 
         col_index = i % num_cols
 
         with cols[col_index]:
-            # Example values for demonstration purposes
-            # channel_id = get_channel_id_from_username(youtuber.strip())
-            # channel_details = get_channel_details(channel_id)
-            # name = channel_details['snippet']['title']
-            # thumbnail = channel_details['snippet']['thumbnails']['medium']['url']
-            name = "Tim Ferris"
-            thumbnail = "https://i.imgur.com/BUpvSqA.jpg"
+            name = youtuber["channel_name"]
+            thumbnail = youtuber['thumbnail']
             st.image(thumbnail, use_column_width=True)
-            html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber}" style="font-size: 14px;" target="_blank"><b>{youtuber}</b></a></div>'
+            html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber["channel_username"]}" style="font-size: 14px;" target="_blank"><b>{name}</b></a></div>'
             st.markdown(html_link, unsafe_allow_html=True)
+
 def youtube_summariser():
     st.title('📼️ YouTube Email Summariser Workshop')
     st.markdown("Learn how to send yourself a monthly email summarising YouTube videos released by your top 5 favourite channels.")
@@ -44,10 +48,30 @@ def youtube_summariser():
 
     st.subheader("Step 1: Get YouTube Channel Details")
 
-    youtubers_input = st.text_input("Enter YouTuber usernames (as comma-separated list):", placeholder="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ", value="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ")
+    youtubers_input = st.text_input(
+        "Enter YouTuber usernames (as comma-separated list):",
+        placeholder="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ",
+        value="timferriss, jamesbriggs, DonatienThorez, plumvillageonline, AIJasonZ"
+    )
     youtubers = youtubers_input.split(",")
 
     get_youtubers = st.button("Get Channels")
 
-    if youtubers and get_youtubers:
-        display_youtuber_details(youtubers)
+    if get_youtubers:
+        st.session_state['youtuber_usernames'] = youtubers
+
+    if 'youtuber_usernames' in st.session_state:
+        all_youtuber_details = []
+        for youtuber_username in st.session_state['youtuber_usernames']:
+            details = get_youtuber_details(youtuber_username)
+            all_youtuber_details.append(details)
+        display_youtuber_details(all_youtuber_details)
+
+    st.subheader("Step 2: Retrieve videos")
+    timeframe_options = {"Week": 7, "Month": 30, "Quarter": 120}
+    selected_timeframe = st.selectbox("Pick the timeframe you want to retrieve videos from:", list(timeframe_options.keys()))
+
+    retrieve_videos = st.button(f"Get videos from the last {selected_timeframe.lower()}")
+
+    if retrieve_videos:
+        st.write("Retrieved videos")
