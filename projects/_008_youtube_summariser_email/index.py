@@ -1,4 +1,5 @@
 from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details, get_videos_from_playlist
+from projects._008_youtube_summariser_email.gpt_api import summarise_transcript
 import streamlit as st
 import pandas as pd
 
@@ -34,8 +35,8 @@ def display_youtuber_details(youtubers):
             st.markdown(html_link, unsafe_allow_html=True)
 
 def youtube_summariser():
-    st.title('📼️ YouTube Email Summariser Workshop')
-    st.markdown("Learn how to send yourself a monthly email summarising YouTube videos released by your top 5 favourite channels.")
+    st.title('📼️ YouTube Summariser')
+    st.markdown("Learn how to send yourself a recurring email summarising YouTube videos released by your top 5 favourite channels.")
 
     with st.expander("✨ See project details (and learning objectives)"):
         st.subheader("Why I built this")
@@ -98,15 +99,35 @@ def youtube_summariser():
 
     if retrieve_videos:
         all_videos = []
+        status = st.empty()
         for youtuber in all_youtuber_details:
             playlist_id = youtuber["uploads_playlist_id"]
-            st.info(f"Getting videos from {youtuber['channel_name']/'s channel'}")
+            channel_name = youtuber["channel_name"]
+            status.info(f"Getting videos from {channel_name}'s channel")
             videos = get_videos_from_playlist(playlist_id, timeframe_options[selected_timeframe])
             all_videos.append(videos)
 
-        for index, video in enumerate(all_videos, start=1):
-            st.info(f"Summarising {index}/{len(all_videos)} video")
-            transcript = video['transcript'][:500]
-            st.write(f"Truncated transcript: {transcript}")
+        flat_videos = [video for group_videos in all_videos for video in group_videos]
+
+        st.success(f"{len(flat_videos)} videos were published over the last {selected_timeframe.lower()}")
+
+        for video_index, video_obj in enumerate(flat_videos):
+            if video_index % 2 == 0:
+                col1, col2 = st.columns(2)
+
+            transcript = video_obj.get('transcript', '')[:70000]
+            summary = summarise_transcript(prompt, transcript)
+
+            col = col1 if video_index % 2 == 0 else col2
+
+            with col:
+                col.image(video_obj.get('thumbnail', ''), use_column_width=True)
+                html_link = f'<div>👉 <a href="https://www.youtube.com/watch?v={video_obj.get("video_id", "")}" style="font-size: 14px;" target="_blank"><b>{video_obj.get("title", "")}</b></a></div>'
+                col.markdown(html_link, unsafe_allow_html=True)
+                col.write(summary)
+
+
+
+
 
 
