@@ -1,5 +1,6 @@
 from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details, get_videos_from_playlist
 from projects._008_youtube_summariser_email.gpt_api import summarise_transcript
+from projects._008_youtube_summariser_email.email_template import generate_summarised_video_section, generate_email_template, send_email
 import streamlit as st
 import pandas as pd
 
@@ -96,6 +97,8 @@ def youtube_summariser():
     selected_timeframe = st.selectbox("Pick the timeframe you want to retrieve videos from:", list(timeframe_options.keys()))
 
     retrieve_videos = st.button(f"Get videos from the last {selected_timeframe.lower()}")
+    if 'summary_html_sections' not in st.session_state:
+        st.session_state['summary_html_sections'] = []
 
     if retrieve_videos:
         all_videos = []
@@ -117,6 +120,7 @@ def youtube_summariser():
 
             transcript = video_obj.get('transcript', '')[:70000]
             summary = summarise_transcript(prompt, transcript)
+            st.session_state['summary_html_sections'].append(generate_summarised_video_section(video_obj, summary))
 
             col = col1 if video_index % 2 == 0 else col2
 
@@ -125,6 +129,21 @@ def youtube_summariser():
                 html_link = f'<div>👉 <a href="https://www.youtube.com/watch?v={video_obj.get("video_id", "")}" style="font-size: 14px;" target="_blank"><b>{video_obj.get("title", "")}</b></a></div>'
                 col.markdown(html_link, unsafe_allow_html=True)
                 col.write(summary)
+
+    st.subheader("Step 4: Send summaries via email")
+    sender_email = st.text_input("Sender Email:", placeholder="sender@fairylights.com")
+    subscribers = st.text_input("Comma-separated subscriber list:", placeholder="subscriber1@gmail.com, subscriber2@yahoo.com")
+    subject_line = st.text_input("Email subject line:", value="🤖 YAYY YouTube Summaries Woo Hoo!")
+
+    email_body = generate_email_template(sender_email, subject_line, st.session_state['summary_html_sections'])
+
+    send_one_email = st.button("Send email to subscribers now")
+
+    if send_one_email:
+        send_email(sender_email, subscribers, subject_line, email_body)
+        st.success("Email sent!")
+
+
 
 
 
