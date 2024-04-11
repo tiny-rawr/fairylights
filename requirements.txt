@@ -3,4 +3,4 @@ streamlit==1.26.0
 mixpanel==4.10.0
 tiktoken==0.5.2
 langchain==0.0.352
-youtube_transcript_api==2.121.0
+google-api-python-client==2.121.0
