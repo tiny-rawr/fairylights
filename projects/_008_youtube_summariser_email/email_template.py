@@ -80,6 +80,12 @@ def send_email(sender_email, subscribers, subject, content):
             server.sendmail(sender_email, receiver_email, content.as_string())
             print(f"Email sent successfully to {receiver_email}")
 
+    except smtplib.SMTPServerDisconnected:
+        print("SMTP server disconnected. Reconnecting...")
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(sender_email, password)
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
