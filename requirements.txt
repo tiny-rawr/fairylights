@@ -4,3 +4,5 @@ mixpanel==4.10.0
 tiktoken==0.5.2
 langchain==0.0.352
 google-api-python-client==2.121.0
+youtube-transcript-api==0.6.2
+markdown2==2.4.13
