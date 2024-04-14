@@ -40,20 +40,17 @@ def youtube_summariser():
     st.markdown("Learn how to send yourself a recurring email summarising YouTube videos released by your top 5 favourite channels.")
 
     with st.expander("✨ See project details (and learning objectives)"):
+        st.subheader("YouTube Summariser Email")
+        st.markdown("Learn [how to use GenAI to summarise YouTube videos](https://fairylightsai.substack.com/p/youtube-summariser-ai-workshop) released by your favourite channels over the last week, month or quarter! Send them as a recurring email too!")
         st.subheader("Why I built this")
-        st.markdown("I'm teaching my first workshop at the University of Technology Sydney as part of Sydney's AI Happy Hour Meetup. I gave three project ideas to choose from and this was the one chosen.")
-        st.subheader("Problem this solves")
-        st.write("Getting a summary of videos released by your favourite YouTube channels means that you can decide which one is worth spending your limited time watching, without missing out on any of the content of your other channels.")
-        st.subheader("The Workshop: Learning Objectives")
-        st.write("✅ Enter the RSS feed URL to your favourite channels and get back the videos published by them over a chosen time period, along with key channel details like name, description & image.")
-        st.write("✅ Get the transcript of the video using Whisper.")
-        st.write("✅ Write a prompt to extract the key details you care about from the transcript using OpenAI Funciton calling.")
-        st.write("✅ Write a prompt to turn your extracted info into a content block formatted the way you want it to with GPT-3.5.")
-        st.write("✅ Extract video screenshots at key timestamps.")
-        st.write("✅ Create an email template for sharing your summaries.")
-        st.write("✅ Send an automated email to yourself with YouTube video summaries.")
-        st.subheader("Demo Video")
-        st.write("[INSERT DEMO VIDEO]")
+        st.markdown("A YouTube Digest helps you deal with information overwhelm by sending yourself a curated list of videos from your favourite channels. The custom GenAI summaries lets you extract the most value from the content, by making it work for you.")
+        st.markdown("- **🙈 Intentional:** Summarise the key points of each video so you can decide which you most want to watch.")
+        st.markdown("- **✅ Actionable:** Distill the video into action steps so you can apply the ideas to your life right now.")
+        st.markdown("- **🎯 Applicable:** Extract key ideas from a video and apply them to your personal goals.")
+        st.subheader("YouTube Summaries Email example:")
+        st.markdown("After following the exercises in this Google CoLab notebook, one of my workshop attendees was able to create this email:")
+        st.image("images/youtube_email_example.png", use_column_width=True)
+
 
     st.subheader("Step 1: Get YouTube Channel Details")
 

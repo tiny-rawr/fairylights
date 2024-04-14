@@ -22,22 +22,15 @@ def generate_email_template(sender_email, subject, summarised_sections):
     # Image URL saved on Imgur
     banner_url = "https://i.imgur.com/wUoeb87.gif"
 
-    # Initialize an empty list to hold the rows of the table
     rows = []
 
-    # Iterate through the summarised_sections in pairs
     for i in range(0, len(summarised_sections), 2):
-        # Get the HTML for the current pair of sections
         row_sections = summarised_sections[i:i+2]
-        # Create a new table row for this pair
         row_html = '<tr>' + ''.join(row_sections) + '</tr>'
-        # Add the row HTML to the list of rows
         rows.append(row_html)
 
-    # Join all the rows into a single string
     all_rows = ''.join(rows)
 
-    # Construct the HTML body using the table rows
     html_body = f"""
     <html>
         <body style="font-family: 'Roboto', sans-serif; font-size: 16px;">
@@ -62,7 +55,7 @@ def generate_email_template(sender_email, subject, summarised_sections):
     return message
 
 
-def send_email(sender_email, subscribers, subject, content):
+def send_email(sender_email, subscribers, content):
     password = st.secrets["smtp"]["app_password"]
     smtp_server = "smtp.gmail.com"
     smtp_port = 587  # For TLS

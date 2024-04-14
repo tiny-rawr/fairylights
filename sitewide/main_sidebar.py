@@ -38,7 +38,7 @@ projects = {
     "#5. Chatty Character": {"function": avatar_debate, "tags": ["Text generation","Image generation", "Text-to-speech", "Lip syncing"], "published": True},
     "#6. Pitch Panda": {"function": pitch_panda, "tags": ["IOT", "Text generation", "Text-to-speech"], "published": True},
     "#7. Member Discovery": {"function": member_discovery, "tags": ["RAG", "Text generation"], "published": True},
-    "#8. YouTube Summariser Email": {"function": youtube_summariser, "tags": ["Email", "Text generation", "Image extraction"], "published": True},
+    "#8. YouTube Summariser": {"function": youtube_summariser, "tags": ["Email", "Text generation", "Image extraction"], "published": True},
 }
 
 # Add slugs dynamically
