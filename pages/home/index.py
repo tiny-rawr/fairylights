@@ -1,5 +1,5 @@
 import streamlit as st
-import webbrowser
+st.set_page_config(layout="wide")
 
 def home():
     st.title("🚀 100 GenAI projects 🤖")
