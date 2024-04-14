@@ -17,6 +17,12 @@ def home():
 
     projects = [
         {
+            "title": "#9. Parallel Processor",
+            "description": "Run 1000s of GPT tasks in under 2m. Same prompt, different data. E.g. Write 1000s of real-estate bios using scraped data in a spreadsheet.",
+            "url": "https://100-genai-projects.streamlit.app/?project=parallel-processor",
+            "image": "images/featured/parallel_processor.png",
+        },
+        {
             "title": "#8. YouTube Summariser",
             "description": "Learn how to use GenAI to summarise YouTube videos released by your favourite channels over the last week, month or quarter! Send them as a recurring email too!",
             "url": "https://100-genai-projects.streamlit.app/?project=youtube-summariser",
