@@ -15,6 +15,8 @@ def youtube_summariser():
         st.subheader("YouTube Summaries Email example:")
         st.markdown("After following the exercises in this Google CoLab notebook, one of my workshop attendees was able to create this email:")
         st.image("images/youtube_email_example.png", use_column_width=True)
+        st.subheader("Demo Video:")
+        st.video("demo_videos/youtube_summariser_demo.mp4")
 
 
     st.subheader("Step 1: Get YouTube Channel Details")

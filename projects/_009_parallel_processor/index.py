@@ -61,7 +61,8 @@ def parallel_processor():
         3. Write your prompt instructions: Tell GPT what you want it to do with the data (e.g. write a bio).
         4. Run the tasks (you can run all rows or just some of them), they will be processed in parallel for speed.
         """)
-        st.write("Watch the demo video below for use-case ideas:")
+        st.subheader("Demo Video:")
+        st.video("demo_videos/parallel_processor.mp4")
 
     st.subheader("1: Upload your data")
     st.markdown("Upload a spreadsheet containing your scraped data, or use the demo data. The demo data includes scraped [Australian Real Estate data (a free dataset from kaggle)](https://www.kaggle.com/datasets/smmmmmmmmmmmm/australia-real-estate-dataset), which we will use to bulk write bios.")
