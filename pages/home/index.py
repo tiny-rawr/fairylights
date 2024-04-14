@@ -17,6 +17,12 @@ def home():
 
     projects = [
         {
+            "title": "#8. YouTube Summariser",
+            "description": "Learn how to use GenAI to summarise YouTube videos released by your favourite channels over the last week, month or quarter! Send them as a recurring email too!",
+            "url": "https://100-genai-projects.streamlit.app/?project=youtube-summariser",
+            "image": "images/featured/youtube_summariser.png",
+        },
+        {
             "title": "#7. Member Discovery",
             "description": "Search for Build Club members who are working in Law, or who can help you build Retrieval Augmented Generation projects, etc (RAG-app built on top of AirTable for a competition).",
             "url": "https://100-genai-projects.streamlit.app/?project=member-discovery",
