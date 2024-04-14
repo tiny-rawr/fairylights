@@ -2,3 +2,5 @@
 genai/
 .streamlit/
 __pycache__/
+projects/_009_parallel_processor/example_requests_to_chat_completion.jsonl
+projects/_009_parallel_processor/example_requests_to_chat_completion_results.jsonl

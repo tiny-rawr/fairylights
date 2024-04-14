@@ -9,6 +9,7 @@ from projects._005_avatar_debate.index import avatar_debate
 from projects._006_pitch_panda.index import pitch_panda
 from projects._007_member_discovery.index import member_discovery
 from projects._008_youtube_summariser_email.index import youtube_summariser
+from projects._009_parallel_processor.index import parallel_processor
 import re
 
 def is_valid_api_key(api_key):
@@ -39,6 +40,7 @@ projects = {
     "#6. Pitch Panda": {"function": pitch_panda, "tags": ["IOT", "Text generation", "Text-to-speech"], "published": True},
     "#7. Member Discovery": {"function": member_discovery, "tags": ["RAG", "Text generation"], "published": True},
     "#8. YouTube Summariser": {"function": youtube_summariser, "tags": ["Email", "Text generation", "Image extraction"], "published": True},
+    "#9. Parallel Processor": {"function": parallel_processor, "tags": ["Text generation"], "published": True},
 }
 
 # Add slugs dynamically
