@@ -1,39 +1,4 @@
-from projects._008_youtube_summariser_email.youtube_api import get_channel_id_from_username, get_channel_details, get_videos_from_playlist
-from projects._008_youtube_summariser_email.gpt_api import summarise_transcript
-from projects._008_youtube_summariser_email.email_template import generate_summarised_video_section, generate_email_template, send_email
 import streamlit as st
-import pandas as pd
-
-def load_prompts(url):
-    df = pd.read_csv(url)
-    prompts = df.set_index('Name')['Prompt'].to_dict()
-    return prompts
-
-def get_youtuber_details(username):
-    channel_id = get_channel_id_from_username(username.strip())
-    channel_details = get_channel_details(channel_id)
-    return {
-        "channel_id": channel_id,
-        "channel_username": username.strip(),
-        "channel_name": channel_details['snippet']['title'],
-        "thumbnail": channel_details['snippet']['thumbnails']['medium']['url'],
-        "uploads_playlist_id": channel_details['contentDetails']['relatedPlaylists']['uploads']
-    }
-def display_youtuber_details(youtubers):
-    num_cols = 5
-
-    for i, youtuber in enumerate(youtubers):
-        if i % num_cols == 0:
-            cols = st.columns(num_cols)
-
-        col_index = i % num_cols
-
-        with cols[col_index]:
-            name = youtuber["channel_name"]
-            thumbnail = youtuber['thumbnail']
-            st.image(thumbnail, use_column_width=True)
-            html_link = f'<div>👉 <a href="https://www.youtube.com/@{youtuber["channel_username"]}" style="font-size: 14px;" target="_blank"><b>{name}</b></a></div>'
-            st.markdown(html_link, unsafe_allow_html=True)
 
 def youtube_summariser():
     st.title('📼️ YouTube Summariser')
